@@ -22,6 +22,6 @@
 
 ## 사용 방법
 
-- [이슈 메뉴](https://github.com/OUS-KR/DEV.INFP.KR/issues) 이동
+- [Issues 메뉴](https://github.com/OUS-KR/DEV.INFP.KR/issues) 이동
 - [New issue 버튼](https://github.com/OUS-KR/DEV.INFP.KR/issues/new/choose) 클릭
 - 기능 선택 후 폼 작성
