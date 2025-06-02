@@ -1,4 +1,4 @@
-# INFP.KR
+# [INFP.KR](https://infp.kr)
 
 ## 주요 기능
 
