@@ -18,7 +18,7 @@
 
 - `INFP.KR/u/{사용자 아이디}/{글 경로}` 형태의 글 작성
   - 사용자 글 예제: [INFP.KR/u/infp/articles/example](https://infp.kr/u/infp/articles/example)
-  - 사용자 글 작성 예제: 
+  - 사용자 글 작성 예제: https://github.com/OUS-KR/INFP.KR/issues/3
 
 ## 사용 방법
 
