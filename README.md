@@ -19,6 +19,11 @@
 - `INFP.KR/u/{사용자 아이디}/{글 경로}` 형태의 글 작성
   - 사용자 글 예제: [INFP.KR/u/infp/articles/example](https://infp.kr/u/infp/articles/example)
   - 사용자 글 작성 예제: https://github.com/OUS-KR/INFP.KR/issues/3
+ 
+### [사용자 메뉴 설정](https://github.com/OUS-KR/INFP.KR/issues/new?template=04-user-menu-setting-by-issue.yml)
+
+- 사용자 단축주소 및 글 페이지에 들어갈 메뉴 설정
+  - 사용자 메뉴 설정 예제: https://github.com/OUS-KR/INFP.KR/issues/4
 
 ## 사용 방법
 
