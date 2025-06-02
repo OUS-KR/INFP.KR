@@ -2,7 +2,7 @@
 
 ## 주요 기능
 
-### 사용자 등록
+### [사용자 등록](https://github.com/OUS-KR/INFP.KR/issues/new?template=01-user-register-by-issue.yml)
 
 - `INFP.KR/u/{사용자 아이디}` 주소 기반의 사용자 등록
   - 사용자 예제: [INFP.KR/u/infp](https://infp.kr/u/infp)
