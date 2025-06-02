@@ -14,7 +14,7 @@
   - 사용자 단축주소 예제: [INFP.KR/u/infp/links/infp-kr](https://infp.kr/u/infp/links/infp-kr)
   - 사용자 단축주소 등록 예제: 
 
-### 사용자 글 작성
+### [사용자 글 작성](https://github.com/OUS-KR/INFP.KR/issues/new?template=03-user-article-writing-by-issue.yml)
 
 - `INFP.KR/u/{사용자 아이디}/{글 경로}` 형태의 글 작성
   - 사용자 글 예제: [INFP.KR/u/infp/articles/example](https://infp.kr/u/infp/articles/example)
