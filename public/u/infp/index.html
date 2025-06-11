@@ -7,14 +7,14 @@
 	<meta name="viewport" content="initial-scale=1, width=device-width">
 	
 	
-	<title>infp - INFP.KR</title>
-	<link rel="canonical" href="https://infp.kr/">
-	<meta name="title" content="infp - INFP.KR">
+	<title>페이지 제목 테스트 - INFP.KR</title>
+	<link rel="canonical" href="https://infp.kr/u/">
+	<meta name="title" content="페이지 제목 테스트 - INFP.KR">
 	<meta name="description" content="">
 	<meta property="og:type" content="website">
-	<meta property="og:title" content="infp - INFP.KR">
+	<meta property="og:title" content="페이지 제목 테스트 - INFP.KR">
 	<meta property="og:description" content="">
-	<meta property="og:url" content="https://infp.kr/">
+	<meta property="og:url" content="https://infp.kr/u/">
 	
 		
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,400,500,600,700&display=swap">
@@ -25,6 +25,7 @@
     
     
     
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/5.8.1/github-markdown.min.css">
         
 
     
@@ -329,7 +330,7 @@
                         <div class="app-toolbar-wrapper w-100">
                             
                             
-                            <h1 class="page-heading text-dark lh-1 fw-bolder fs-2x">infp</h1>
+                            <h1 class="page-heading text-dark lh-1 fw-bolder fs-2x">페이지 제목 테스트</h1>
                             
                                 
                             
@@ -351,6 +352,8 @@
                                         </a>
                                                                             </li>
                                                                         
+                                                                        <li class="breadcrumb-item lh-1"><i class="ki-duotone ki-right fs-4 text-gray-700 mx-n1"></i></li>
+<li class="breadcrumb-item text-gray-700 lh-1"><a href="/u/infp/" class="text-gray-700 text-hover-primary"><span></span></a></li>
                                                                     </ul>
                             </nav>
                             
@@ -393,11 +396,11 @@
                                     <div class="card shadow-sm">
                                         <div class="card-header">
                                             <div class="card-title">
-                                                <h2>Welcome, infp!</h2>
+                                                <h2>사용자 글 제목 테스트</h2>
                                             </div>
                                         </div>
                                         <div class="card-body fs-5 fs-lg-6">
-                                            <p>This is infp's personal page.</p>
+                                            <div class="markdown-body"><p><a target="_blank" rel="noopener noreferrer" href="73cd8a67-6dd7-4e89-b3bc-af324d545c20.png"><img src="73cd8a67-6dd7-4e89-b3bc-af324d545c20.png" alt="Image" style="max-width: 100%;"></a></p></div>
                                         </div>
                                     </div>
                                     
@@ -515,14 +518,14 @@
             Kakao.isInitialized();
             
             // Canonical URL
-            const canonical_url = 'https://infp.kr/';
+            const canonical_url = 'https://infp.kr/u/';
             
             function share_with_kakaotalk()
             {
                 Kakao.Share.sendDefault
                 ({
                     objectType: 'text',
-                    text: 'infp - INFP.KR',
+                    text: '페이지 제목 테스트 - INFP.KR',
                     link:
                     {
                         mobileWebUrl: canonical_url,
@@ -533,7 +536,7 @@
             
             function share_with_naver()
             {
-                window.open('https://share.naver.com/web/shareView?title=' + encodeURIComponent('infp - INFP.KR') + '&url=' + encodeURIComponent(canonical_url));
+                window.open('https://share.naver.com/web/shareView?title=' + encodeURIComponent('페이지 제목 테스트 - INFP.KR') + '&url=' + encodeURIComponent(canonical_url));
             }
             
             function share_with_line()
@@ -548,7 +551,7 @@
             
             function share_with_twitter()
             {
-                window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('infp - INFP.KR') + '&url=' + encodeURIComponent(canonical_url));
+                window.open('https://twitter.com/intent/tweet?text=' + encodeURIComponent('페이지 제목 테스트 - INFP.KR') + '&url=' + encodeURIComponent(canonical_url));
             }
         </script>
         
@@ -569,7 +572,7 @@
     
     
     <script>
-    fetch('/u/infp/menu.json')
+    fetch('/${ENV__USER_SERVICE_MENU_INFO_FILE}')
         .then(res => res.json())
         .then(data => {
             const wrapper = document.querySelector('nav > div.fs-5.fs-lg-6');
