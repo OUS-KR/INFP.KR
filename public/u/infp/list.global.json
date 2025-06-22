@@ -35,15 +35,6 @@
         "content.json"
       ],
       "created_at": "2025-06-23T05:58:56+09:00"
-    },
-    {
-      "type": "user-short-url",
-      "path": "links/google",
-      "files": [
-        "index.html",
-        "content.json"
-      ],
-      "created_at": "2025-06-23T06:29:08+09:00"
     }
   ]
 }
