@@ -1,0 +1,9 @@
+{
+  "type": "user-short-url",
+  "path": "links/google",
+  "files": [
+    "index.html",
+    "content.json"
+  ],
+  "created_at": "2025-06-23T06:21:22+09:00"
+}
