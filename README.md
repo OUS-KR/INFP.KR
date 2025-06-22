@@ -18,8 +18,8 @@
   - 동일한 단축 경로 존재 시 덮어쓰기
 - `INFP.KR/@{사용자 아이디}/{단축 경로}` 형태의 짧은 주소 지원
   - 사용자 단축주소 예제: [INFP.KR/@infp/links/infp-kr](https://infp.kr/@infp/links/infp-kr)
-- 단축 경로가 `links`로 시작하면 `INFP.KR/@{사용자 아이디}/@{links를 제외한 단축 경로}` 형태로 생략 가능
-  - 사용자 단축주소 예제: [INFP.KR/@infp/@infp-kr](https://infp.kr/@infp/@infp-kr)
+- 단축 경로가 `links`로 시작하면 `INFP.KR/@{사용자 아이디}/!{links를 제외한 단축 경로}` 형태로 생략 가능
+  - 사용자 단축주소 예제: [INFP.KR/@infp/!infp-kr](https://infp.kr/@infp/!infp-kr)
 
 ### [사용자 글 작성](https://github.com/OUS-KR/INFP.KR/issues/new?template=03-user-article-writing-by-issue.yml)
 
