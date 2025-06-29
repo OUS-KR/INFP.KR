@@ -1,4 +1,4 @@
 /@:user/!*      /u/:user/links/:splat       301
 /@:user/*       /u/:user/:splat             301
 /@:user         /u/:user                    301
-/!*             /u/infp/links/:splat    301
+/!*             /u/infp-kr/links/:splat    301
