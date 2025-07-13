@@ -52,6 +52,8 @@
   - 예제: [INFP.KR/yt/1ZX1vEDTfY4/1m6s](https://infp.kr/yt/1ZX1vEDTfY4/1m6s), [INFP.KR/yt/yebNIHKAC4A/56](https://infp.kr/yt/yebNIHKAC4A/56)
 - 유튜브 영상 썸네일: `INFP.KR/yt/img/{유튜브 영상 아이디}`
   - 예제: [INFP.KR/yt/img/1ZX1vEDTfY4](https://infp.kr/yt/img/1ZX1vEDTfY4), [INFP.KR/yt/img/yebNIHKAC4A](https://infp.kr/yt/img/yebNIHKAC4A)
+- 유튜브 채널 RSS: `INFP.KR/yt/rss/{유튜브 채널 아이디}`
+  - 예제: [INFP.KR/yt/rss/UC-Fnix71vRP64WXeo0ikd0Q](https://infp.kr/yt/rss/UC-Fnix71vRP64WXeo0ikd0Q)
 
 #### 마크다운 작성 시 사용 방법
 
