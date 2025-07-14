@@ -48,17 +48,10 @@ jobs:
         issue-form-body: '${{ github.event.issue.body }}'
         
     - name: Extract the first user ID from registered user info
+      uses: ./.github/actions/extract-the-first-user-id-from-registered-user-info
       id: registered-user-info
-      env:
-        ENV__USER_REGISTER_INFO_FILE: ${{ steps.env.outputs.user_register_info_file }}
-      run: |
-        # Extract
-        FIRST_USER_ID_IN_REGISTERED_USER_INFO=$(jq -r '.user_ids[0]' "$ENV__USER_REGISTER_INFO_FILE")
-        
-        # Github output
-        {
-          echo "first_user_id_in_registered_user_info=$FIRST_USER_ID_IN_REGISTERED_USER_INFO"
-        } > "$GITHUB_OUTPUT"
+      with:
+        user-register-info-file: ${{ steps.env.outputs.user_register_info_file }}
         
     - name: Extract user ID and menu setting from parsed issue
       id: extract
@@ -68,6 +61,7 @@ jobs:
         ENV__USER_MENU_INFO_FILE_NAME: ${{ steps.env.outputs.user_menu_info_file_name }}
         ENV__USER_MENU_HTML_FILE_NAME: ${{ steps.env.outputs.user_menu_html_file_name }}
         PARSED_ISSUE: ${{ steps.issue-parser.outputs.parsed-issue }}
+        FIRST_USER_ID_IN_REGISTERED_USER_INFO: ${{ steps.registered-user-info.outputs.first-user-id-in-registered-user-info }}
         ISSUE_NUMBER: ${{ github.event.issue.number }}
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
@@ -104,33 +98,20 @@ jobs:
         } >> $GITHUB_OUTPUT
         
     - name: Check if user exists
-      env:
-        ENV__USER_PUBLIC_PATH: ${{ steps.extract.outputs.user_public_path }}
-        USER_ID: ${{ steps.extract.outputs.user_id }}
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        # Validation: User ID
-        if [ ! -d "$ENV__USER_PUBLIC_PATH" ]; then
-          echo "존재하지 않는 사용자 아이디: **$USER_ID**" > comment.md
-          gh issue comment "$ISSUE_NUMBER" -F comment.md
-          exit 1
-        fi
+      uses: ./.github/actions/check-if-user-does-not-exist
+      with:
+        user-public-path: ${{ steps.extract.outputs.user_public_path }}
+        user-id: ${{ steps.extract.outputs.user_id }}
+        issue-number: ${{ github.event.issue.number }}
+        gh-token: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Check GitHub user ownership
-      env:
-        ENV__USER_PUBLIC_META_INFO_FILE: ${{ steps.extract.outputs.user_public_meta_info_file }}
-        GITHUB_ID: ${{ github.event.issue.user.id }}
-        ISSUE_NUMBER: ${{ github.event.issue.number }}
-        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      run: |
-        # Validation: User ownership
-        GITHUB_ID_META_FILE=$(jq -r '.github_id // empty' "$ENV__USER_PUBLIC_META_INFO_FILE")
-        if [ "$GITHUB_ID" != "$GITHUB_ID_META_FILE" ]; then
-          echo "권한이 없습니다" > comment.md
-          gh issue comment "$ISSUE_NUMBER" -F comment.md
-          exit 1
-        fi
+      uses: ./.github/actions/check-github-user-ownership
+      with:
+        user-public-meta-info-file: ${{ steps.extract.outputs.user_public_meta_info_file }}
+        github-id: ${{ github.event.issue.user.id }}
+        issue-number: ${{ github.event.issue.number }}
+        gh-token: ${{ secrets.GITHUB_TOKEN }}
         
     - name: Convert menu markdown to html
       id: convert
@@ -230,5 +211,5 @@ jobs:
         USER_ID: ${{ steps.extract.outputs.user_id }}
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
-        echo "사용자 **$USER_ID** 메뉴 설정 준비 완료" > comment.md
+        echo "사용자 **$USER_ID** 메뉴 설정 완료" > comment.md
         gh issue comment ${{ github.event.issue.number }} -F comment.md

@@ -42,7 +42,28 @@
 - [New issue 버튼](https://github.com/OUS-KR/INFP.KR/issues/new/choose) 클릭
 - 기능 선택 후 폼 작성
 
-## 기타
+## 기타 기능
+
+### 유튜브 단축주소
+
+- 유튜브 영상: `INFP.KR/yt/{유튜브 영상 아이디}`
+  - 예제: [INFP.KR/yt/1ZX1vEDTfY4](https://infp.kr/yt/1ZX1vEDTfY4), [INFP.KR/yt/yebNIHKAC4A](https://infp.kr/yt/yebNIHKAC4A)
+- 유튜브 영상 + 시작 시간 옵션: `INFP.KR/{유튜브 영상 아이디}/{시작 시간}`
+  - 예제: [INFP.KR/yt/1ZX1vEDTfY4/1m6s](https://infp.kr/yt/1ZX1vEDTfY4/1m6s), [INFP.KR/yt/yebNIHKAC4A/56](https://infp.kr/yt/yebNIHKAC4A/56)
+- 유튜브 영상 썸네일: `INFP.KR/yt/img/{유튜브 영상 아이디}`
+  - 예제: [INFP.KR/yt/img/1ZX1vEDTfY4](https://infp.kr/yt/img/1ZX1vEDTfY4), [INFP.KR/yt/img/yebNIHKAC4A](https://infp.kr/yt/img/yebNIHKAC4A)
+- 유튜브 채널 RSS: `INFP.KR/yt/rss/{유튜브 채널 아이디}`
+  - 예제: [INFP.KR/yt/rss/UC-Fnix71vRP64WXeo0ikd0Q](https://infp.kr/yt/rss/UC-Fnix71vRP64WXeo0ikd0Q)
+
+#### 마크다운 작성 시 사용 방법
+
+- 유튜브 영상 썸네일 링크: `[![{유튜브 영상 썸네일 텍스트}]({유튜브 영상 썸네일 주소})]({유튜브 영상 주소})`
+  - 예제: `[![FIFTY FIFTY (피프티피프티) 'Pookie' Official MV](https://INFP.KR/yt/img/1ZX1vEDTfY4)](https://INFP.KR/yt/1ZX1vEDTfY4/1m6s)`
+  [![FIFTY FIFTY (피프티피프티) 'Pookie' Official MV](https://INFP.KR/yt/img/1ZX1vEDTfY4)](https://INFP.KR/yt/1ZX1vEDTfY4/1m6s)
+  - 예제: `[![“Golden” Official Lyric Video | KPop Demon Hunters | Sony Animation](https://INFP.KR/yt/img/yebNIHKAC4A)](https://INFP.KR/yt/yebNIHKAC4A/56)`
+  [![“Golden” Official Lyric Video | KPop Demon Hunters | Sony Animation](https://INFP.KR/yt/img/yebNIHKAC4A)](https://INFP.KR/yt/yebNIHKAC4A/56)
+
+## 주의사항
 
 - 다음과 같은 콘텐츠 포함 시 제재
   - 불법 행위 또는 범죄를 조장하는 내용 (마약, 폭력, 성범죄, 불법 무기 등 관련 정보 유포 등)
