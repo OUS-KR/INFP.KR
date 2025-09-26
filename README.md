@@ -9,6 +9,7 @@
   - [사용자 등록 예제](https://github.com/OUS-KR/INFP.KR/issues/1)
 - `INFP.KR/@{사용자 아이디}` 형태의 짧은 주소 지원
   - 사용자 예제: [INFP.KR/@infp](https://infp.kr/@infp)
+- 부적절한 아이디 (욕설, 관리자 등)는 제한되어 등록 시 삭제
 
 ### [사용자 단축주소 생성](https://github.com/OUS-KR/INFP.KR/issues/new?template=02-user-short-url-register-by-issue.yml)
 
