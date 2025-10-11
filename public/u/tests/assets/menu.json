@@ -1,0 +1,48 @@
+[
+  {
+    "mainTitle": "오늘의 콘텐츠",
+    "items": [
+      {
+        "title": "오늘의 운세",
+        "url": "/u/tests/today-fortune/",
+        "type": "운세",
+        "description": "INFP를 위한 오늘의 운세와 조언"
+      },
+      {
+        "title": "오늘의 게임",
+        "url": "/u/tests/today-game/",
+        "type": "게임",
+        "description": "오늘의 추천 게임"
+      }
+    ]
+  },
+  {
+    "mainTitle": "정보",
+    "items": [
+      {
+        "title": "INFP 특징 분석: 열정적인 중재자",
+        "url": "/u/tests/info-characteristics/",
+        "type": "정보",
+        "description": "INFP의 핵심 특징, 장단점, 성장 방법"
+      },
+      {
+        "title": "INFP 커리어와 성장",
+        "url": "/u/tests/info-careers/",
+        "type": "정보",
+        "description": "추천 직업, 근무 환경, 생산성 팁"
+      },
+      {
+        "title": "INFP 인지기능 분석 (Fi, Ne, Si, Te)",
+        "url": "/u/tests/info-cognitive-functions/",
+        "type": "정보",
+        "description": "주기능부터 열등기능까지 심층 분석"
+      },
+      {
+        "title": "INFP와 에니어그램 하위유형",
+        "url": "/u/tests/info-subtypes/",
+        "type": "정보",
+        "description": "4번, 9번 등 하위유형 비교"
+      }
+    ]
+  }
+]

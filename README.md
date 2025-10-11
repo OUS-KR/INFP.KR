@@ -5,10 +5,11 @@
 ### [사용자 등록](https://github.com/OUS-KR/INFP.KR/issues/new?template=01-user-register-by-issue.yml)
 
 - `INFP.KR/u/{사용자 아이디}` 주소 기반의 사용자 등록
-  - 사용자 예제: [INFP.KR/u/infp](https://infp.kr/u/infp)
+  - 사용자 예제: [INFP.KR/u/infp](https://infp.kr/u/infp), [INFP.KR/u/tests/](https://infp.kr/u/tests)
   - [사용자 등록 예제](https://github.com/OUS-KR/INFP.KR/issues/1)
 - `INFP.KR/@{사용자 아이디}` 형태의 짧은 주소 지원
-  - 사용자 예제: [INFP.KR/@infp](https://infp.kr/@infp)
+  - 사용자 예제: [INFP.KR/@infp](https://infp.kr/@infp), [INFP.KR/@tests](https://infp.kr/@tests)
+- 부적절한 아이디 (욕설, 관리자 등)는 제한되어 등록 시 삭제
 
 ### [사용자 단축주소 생성](https://github.com/OUS-KR/INFP.KR/issues/new?template=02-user-short-url-register-by-issue.yml)
 

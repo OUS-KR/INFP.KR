@@ -1,0 +1,40 @@
+{
+  "list": [
+    {
+      "type": "user-article",
+      "path": "",
+      "files": [
+        "index.html",
+        "content.json"
+      ],
+      "created_at": "2025-10-04T15:14:53+09:00"
+    },
+    {
+      "type": "user-article",
+      "path": "sns",
+      "files": [
+        "index.html",
+        "content.json"
+      ],
+      "created_at": "2025-10-04T15:14:58+09:00"
+    },
+    {
+      "type": "user-article",
+      "path": "songs",
+      "files": [
+        "index.html",
+        "content.json"
+      ],
+      "created_at": "2025-10-04T15:15:03+09:00"
+    },
+    {
+      "type": "user-article",
+      "path": "wallpapers",
+      "files": [
+        "index.html",
+        "content.json"
+      ],
+      "created_at": "2025-10-04T15:15:08+09:00"
+    }
+  ]
+}
