@@ -15,5 +15,16 @@
         "description": "오늘의 추천 게임"
       }
     ]
+  },
+  {
+    "mainTitle": "정보",
+    "items": [
+      {
+        "title": "INFP 특징 분석: 열정적인 중재자",
+        "url": "/u/tests/info-characteristics/",
+        "type": "정보",
+        "description": "INFP의 핵심 특징, 장단점, 성장 방법"
+      }
+    ]
   }
 ]
