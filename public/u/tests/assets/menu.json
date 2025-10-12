@@ -68,5 +68,117 @@
         "description": "미루는 습관을 이기는 법"
       }
     ]
+  },
+  {
+    "mainTitle": "테스트",
+    "items": [
+      {
+        "title": "INFP 진정한 자아 찾기 테스트",
+        "url": "/u/tests/test-finding-true-self/",
+        "type": "테스트",
+        "description": "INFP의 핵심 동기인 진정성을 추구하고, 내면의 가치에 따라 '진정한 나'를 찾아가는 여정을 측정합니다."
+      },
+      {
+        "title": "INFP 연애 스타일 테스트",
+        "url": "/u/tests/test-relationship-style/",
+        "type": "테스트",
+        "description": "INFP의 연애 스타일 알아보기"
+      },
+      {
+        "title": "INFP 스트레스 원인 테스트",
+        "url": "/u/tests/test-stress-triggers/",
+        "type": "테스트",
+        "description": "스트레스 원인 진단 테스트"
+      },
+      {
+        "title": "INFP 창의적 상상력 테스트",
+        "url": "/u/tests/test-creative-imagination/",
+        "type": "테스트",
+        "description": "INFP의 풍부한 내면세계와 현실을 넘어 새로운 이야기를 만들어내는 독창적인 상상력을 측정합니다."
+      },
+      {
+        "title": "INFP 빙고 챌린지",
+        "url": "/u/tests/test-bingo/",
+        "type": "테스트",
+        "description": "INFP 특징으로 구성된 빙고 게임"
+      },
+      {
+        "title": "INFP 이상적인 세계관 테스트",
+        "url": "/u/tests/test-idealistic-worldview/",
+        "type": "테스트",
+        "description": "세상을 더 나은 곳으로 만들고 싶어 하는 INFP의 이상주의적 가치관과 사회적 신념을 측정합니다."
+      },
+      {
+        "title": "INFP 감정 표현 방식 테스트",
+        "url": "/u/tests/test-emotional-expression/",
+        "type": "테스트",
+        "description": "INFP가 자신의 깊은 감정을 어떻게 인식하고 표현하는지, 그리고 타인과의 감정적 교류 방식을 측정합니다."
+      }
+    ]
+  },
+  {
+    "mainTitle": "게임",
+    "items": [
+      {
+        "title": "내러티브 어드벤처",
+        "url": "/u/tests/game-narrative-adventure/",
+        "type": "게임",
+        "description": "감동적인 스토리를 따라가며, 플레이어의 선택이 캐릭터의 운명과 세상의 이야기를 바꾸는 깊이 있는 모험 게임입니다."
+      },
+      {
+        "title": "스토리 창작",
+        "url": "/u/tests/game-story-creator/",
+        "type": "게임",
+        "description": "자신만의 세계관, 캐릭터, 사건을 자유롭게 설정하여 한 편의 소설이나 시나리오를 완성하는 창작 게임입니다."
+      },
+      {
+        "title": "세계관 구축",
+        "url": "/u/tests/game-world-builder/",
+        "type": "게임",
+        "description": "자신만의 판타지 왕국이나 미래 도시를 건설하고, 그곳의 문화, 역사, 규칙을 상상력으로 채워나가는 게임입니다."
+      },
+      {
+        "title": "내면세계 탐험",
+        "url": "/u/tests/game-inner-world-exploration/",
+        "type": "게임",
+        "description": "꿈이나 기억, 무의식과 같은 상징적인 내면세계를 탐험하며 자아를 성찰하고 성장하는 힐링 게임입니다."
+      },
+      {
+        "title": "가능성 탐색",
+        "url": "/u/tests/game-possibility-explorer/",
+        "type": "게임",
+        "description": "다양한 삶의 갈림길에서 자신의 가치관에 따라 최선의 선택을 하며 자신만의 인생 경로를 만들어가는 시뮬레이션 게임입니다."
+      },
+      {
+        "title": "영적 동물 보호소",
+        "url": "/u/tests/game-spirit-animal-sanctuary/",
+        "type": "게임",
+        "description": "상처 입은 마법 동물들을 위한 보호소를 운영하며, 각 동물의 고유한 감정을 이해하고 교감하며 치유해주는 게임입니다."
+      },
+      {
+        "title": "시 창작 워크숍",
+        "url": "/u/tests/game-poetry-workshop/",
+        "type": "게임",
+        "description": "아름다운 이미지나 음악 같은 예술적 영감을 받아, 자신만의 감성을 담은 짧은 시를 완성하는 창작 게임입니다."
+      },
+      {
+        "title": "꿈 조각가",
+        "url": "/u/tests/game-dream-weaver/",
+        "type": "게임",
+        "description": "다른 사람의 꿈속에 들어가, 감정과 기억의 조각들을 맞추며 악몽을 해결하고 평화로운 꿈으로 바꿔주는 퍼즐 어드벤처 게임입니다."
+      },
+      {
+        "title": "음악 기억력 게임",
+        "url": "/u/tests/game-music-memory/",
+        "type": "게임",
+        "description": "음악 기억력 게임"
+      },
+      {
+        "title": "리듬 마스터 게임",
+        "url": "/u/tests/game-rhythm-master/",
+        "type": "게임",
+        "description": "리듬 마스터 게임"
+      }
+    ]
   }
 ]
