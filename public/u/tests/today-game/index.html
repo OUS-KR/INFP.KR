@@ -185,66 +185,75 @@
         gameInProgress = true;
     }
 
-    // Game 1: Creative Connection
-    function setupCreativeConnectionGame() {
-        document.getElementById('gameTitle').innerText = "오늘의 게임: 창의적 연결";
+    // Game 1: Ideal Values Choice Quiz
+    function setupIdealValuesChoiceQuiz() {
+        document.getElementById('gameTitle').innerText = "오늘의 게임: 이상적 가치관 선택 퀴즈";
         const gameArea = document.getElementById('gameArea');
-        const wordPairs = [["달", "자전거"], ["비", "도서관"], ["별", "피아노"]];
-        const pair = wordPairs[Math.floor(currentRandFn() * wordPairs.length)];
-        gameArea.innerHTML = `<div class="game-display question">'${pair[0]}'와(과) '${pair[1]}'.<br>두 단어를 사용하여 감성적인 한 문장을 만들어 보세요.</div>`;
-        document.getElementById('game-input-area').innerHTML = `
-            <div class="game-input">
-                <input type="text" id="userSentence" placeholder="여기에 문장을 작성하세요...">
-                <button id="submitSentence">제출</button>
-            </div>
-        `;
-        gameInProgress = true;
-    }
-
-    // Game 2: What's the Vibe?
-    function setupVibeGame() {
-        document.getElementById('gameTitle').innerText = "오늘의 게임: 분위기 맞추기";
-        const gameArea = document.getElementById('gameArea');
-        const vibes = [
-            { item: "https://via.placeholder.com/300x200/333/fff?text=Rainy+Window", type: "image", a: ["기쁨", "우울함", "호기심"], correct: 1 },
-            { item: "(새가 지저귀는 소리)", type: "sound", a: ["평화로움", "긴장감", "슬픔"], correct: 0 }
+        const scenarios = [
+            { q: "세상을 더 나은 곳으로 만들기 위해 당신이 할 수 있는 가장 중요한 일은?", a: ["개인의 변화를 통해 사회에 긍정적인 영향을 미친다.", "사회 운동에 적극적으로 참여하여 변화를 이끌어낸다.", "현실적인 문제 해결에 집중한다."], correct: 0 },
+            { q: "부당한 상황을 목격했을 때, 당신의 내면은 어떻게 반응하나요?", a: ["분노하며 즉시 행동에 나선다.", "깊은 슬픔과 함께 변화를 위한 방법을 고민한다.", "현실적인 한계를 인정하고 받아들인다."], correct: 1 },
+            { q: "당신에게 '성공'이란 무엇인가요?", a: ["사회적으로 인정받는 지위와 부.", "자신의 가치와 신념에 따라 살아가는 삶.", "타인에게 긍정적인 영향을 미치는 것."], correct: 1 }
         ];
-        const vibe = vibes[Math.floor(currentRandFn() * vibes.length)];
-        currentCorrectAnswer = vibe.correct;
-        let itemHtml = vibe.type === 'image' ? `<img src="${vibe.item}" style="max-width:100%; border-radius:8px;">` : `<p style="font-style:italic;">${vibe.item}</p>`;
+        const scenario = scenarios[Math.floor(currentRandFn() * scenarios.length)];
+        currentCorrectAnswer = scenario.correct;
         gameArea.innerHTML = `
-            <div class="game-display question">다음 ${vibe.type === 'image' ? '이미지에서' : '소리에서'} 어떤 분위기가 느껴지나요?</div>
-            ${itemHtml}
-            <div class="choices" style="margin-top:1em;">
-                ${vibe.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
+            <div class="game-display question">${scenario.q}</div>
+            <div class="choices">
+                ${scenario.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
             </div>
         `;
         document.getElementById('game-input-area').innerHTML = '';
         gameInProgress = true;
     }
 
-    // Game 3: Idealistic Slogan
-    function setupSloganGame() {
-        document.getElementById('gameTitle').innerText = "오늘의 게임: 이상적인 슬로건";
+    // Game 2: Emotional Scenario Empathy Quiz
+    function setupEmotionalScenarioEmpathyQuiz() {
+        document.getElementById('gameTitle').innerText = "오늘의 게임: 감성적 시나리오 공감 퀴즈";
         const gameArea = document.getElementById('gameArea');
-        const causes = ["환경 보호", "동물권 신장", "모두를 위한 교육"];
-        const cause = causes[Math.floor(currentRandFn() * causes.length)];
-        gameArea.innerHTML = `<div class="game-display question">'${cause}'을(를) 위한 짧고 이상적인 슬로건을 만들어 보세요.</div>`;
-        document.getElementById('game-input-area').innerHTML = `
-            <div class="game-input">
-                <input type="text" id="userSlogan" placeholder="예: 모든 생명이 빛나는 세상을 위해">
-                <button id="submitSlogan">제출</button>
+        const scenarios = [
+            { q: "오래된 일기장을 발견했습니다. 그 안에는 잊고 있던 꿈과 희망이 담겨 있습니다. 당신의 감정은?", a: ["아련한 그리움과 새로운 영감.", "과거에 대한 후회와 아쉬움.", "현실과의 괴리감과 좌절."], correct: 0 },
+            { q: "숲 속을 걷다가 우연히 작은 새가 둥지에서 떨어져 있는 것을 발견했습니다. 당신의 감정은?", a: ["안타까움과 보호해주고 싶은 마음.", "자연의 섭리이니 개입하지 않는다.", "사진을 찍어 SNS에 공유한다."], correct: 0 },
+            { q: "밤하늘의 수많은 별들을 바라보고 있습니다. 당신의 감정은?", a: ["광활한 우주에 대한 경외감과 나의 존재에 대한 성찰.", "아름답지만 나와는 상관없는 풍경.", "별자리를 찾아보고 싶다."], correct: 0 }
+        ];
+        const scenario = scenarios[Math.floor(currentRandFn() * scenarios.length)];
+        currentCorrectAnswer = scenario.correct;
+        gameArea.innerHTML = `
+            <div class="game-display question">${scenario.q}</div>
+            <div class="choices">
+                ${scenario.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
             </div>
         `;
+        document.getElementById('game-input-area').innerHTML = '';
+        gameInProgress = true;
+    }
+
+    // Game 3: Inner Voice Choice Quiz
+    function setupInnerVoiceChoiceQuiz() {
+        document.getElementById('gameTitle').innerText = "오늘의 게임: 내면의 목소리 선택 퀴즈";
+        const gameArea = document.getElementById('gameArea');
+        const scenarios = [
+            { q: "친구가 부당한 비판을 받고 있습니다. 당신의 내면의 목소리는?", a: ["친구의 편에 서서 함께 분노한다.", "친구의 감정을 이해하고 조용히 지지한다.", "상황을 객관적으로 분석하고 해결책을 제시한다."], correct: 1 },
+            { q: "당신이 옳다고 믿는 가치가 사회적으로 인정받지 못하고 있습니다. 당신의 내면의 목소리는?", a: ["내 신념을 굽히지 않고 묵묵히 나아간다.", "사회적 흐름에 맞춰 내 가치를 수정한다.", "다른 사람들에게 내 가치를 적극적으로 설득한다."], correct: 0 },
+            { q: "새로운 도전을 앞두고 두려움과 설렘이 공존합니다. 당신의 내면의 목소리는?", a: ["두려워 말고 용기 있게 나아가라.", "신중하게 모든 가능성을 검토하라.", "지금은 때가 아니니 기다려라."], correct: 0 }
+        ];
+        const scenario = scenarios[Math.floor(currentRandFn() * scenarios.length)];
+        currentCorrectAnswer = scenario.correct;
+        gameArea.innerHTML = `
+            <div class="game-display question">${scenario.q}</div>
+            <div class="choices">
+                ${scenario.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
+            </div>
+        `;
+        document.getElementById('game-input-area').innerHTML = '';
         gameInProgress = true;
     }
 
     // --- Game Dispatcher and Common Logic ---
     const gameTypes = [
         setupEmpathyChoiceGame,
-        setupCreativeConnectionGame,
-        setupVibeGame,
-        setupSloganGame
+        setupIdealValuesChoiceQuiz,
+        setupEmotionalScenarioEmpathyQuiz,
+        setupInnerVoiceChoiceQuiz
     ];
 
     function getDayOfWeekText(day) {
@@ -279,17 +288,6 @@
         document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
     }
 
-    function handleGenericSubmit(inputId, correctMsg) {
-        if (!gameInProgress) return;
-        const userInput = document.getElementById(inputId).value;
-        if (userInput.trim()) {
-            showFeedback(true, correctMsg);
-        } else {
-            showFeedback(false, "한 글자라도 입력해 주세요!");
-        }
-        document.querySelector(`#${inputId} + button`).disabled = true;
-    }
-
     function initDailyGame() {
         const today = new Date();
         const seed = getDailySeed();
@@ -304,16 +302,10 @@
         document.getElementById('feedbackMessage').innerText = '';
         document.getElementById('feedbackMessage').className = "feedback-message";
         
-        const currentGameFn = gameTypes[gameTypeIndex];
-        if (currentGameFn === setupCreativeConnectionGame) {
-            document.getElementById('submitSentence').addEventListener('click', () => handleGenericSubmit('userSentence', '아름다운 문장이네요!'));
-        } else if (currentGameFn === setupSloganGame) {
-            document.getElementById('submitSlogan').addEventListener('click', () => handleGenericSubmit('userSlogan', '멋진 슬로건이에요!'));
-        } else {
-             document.querySelectorAll('.choice-btn').forEach(btn => {
-                btn.addEventListener('click', handleChoiceClick);
-            });
-        }
+        // Add event listeners after creating the elements
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.addEventListener('click', handleChoiceClick);
+        });
     }
 
     window.onload = function() {
