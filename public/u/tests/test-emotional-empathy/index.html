@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>INFP 스트레스 원인 테스트</title>
+    <title>INFP 감성적 공감 능력 테스트</title>
     <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251012150000">
 </head>
 <body>
@@ -19,8 +19,8 @@
     </header>
     <div id="quiz-container" class="container">
         <div id="start-area">
-            <h1>INFP 스트레스 원인 테스트</h1>
-            <p>스트레스 원인 진단 테스트</p>
+            <h1>INFP 감성적 공감 능력 테스트</h1>
+            <p>INFP의 뛰어난 공감 능력과 타인의 감정을 깊이 이해하고 반응하는 방식을 측정합니다.</p>
             <button id="start-btn" class="btn btn-primary">테스트 시작하기</button>
         </div>
 
@@ -59,46 +59,45 @@
         let currentQuestionIndex = 0;
         let score = 0;
 
-        // Placeholder quiz data
         const quizData = [
             {
-                question: '나의 신념과 가치에 반하는 일을 해야 할 때 당신은?',
+                question: '친구가 슬퍼할 때 당신의 반응은?',
                 answers: [
-                    { text: '내적 갈등을 겪고 극심한 스트레스를 받는다.', score: 10 },
-                    { text: '어쩔 수 없이 따르지만, 마음속으로는 불편함을 느낀다.', score: 5 },
-                    { text: '유연하게 대처하고 상황에 맞춰 행동한다.', score: 1 }
+                    { text: '함께 슬퍼하고 진심으로 위로하며, 친구의 감정을 공유한다.', score: 10 },
+                    { text: '친구의 이야기를 들어주고 공감하지만, 감정에 휩쓸리지는 않는다.', score: 5 },
+                    { text: '친구에게 해결책을 제시하거나, 기분 전환을 제안한다.', score: 1 }
                 ]
             },
             {
-                question: '나의 진심이나 노력이 비판받거나 오해받을 때 당신은?',
+                question: '영화나 소설 속 인물의 감정에 깊이 몰입하여 현실처럼 느끼나요?',
                 answers: [
-                    { text: '깊은 상처를 받고 자기 비판에 빠진다.', score: 10 },
-                    { text: '아쉽지만, 나의 진심을 이해해주지 못하는 것에 대해 실망한다.', score: 5 },
-                    { text: '크게 신경 쓰지 않고 나의 소신대로 행동한다.', score: 1 }
+                    { text: '매우 그렇다. 가상의 인물에게도 깊이 공감하며 감정 이입이 잘 된다.', score: 10 },
+                    { text: '가끔 그렇다. 특히 감동적인 장면에서는 몰입한다.', score: 5 },
+                    { text: '아니다. 현실과 가상을 명확히 구분하는 편이다.', score: 1 }
                 ]
             },
             {
-                question: '사람들 사이의 갈등이나 다툼을 목격할 때 당신의 기분은?',
+                question: '타인의 고통을 보면 나도 모르게 눈물이 나거나 마음이 아픈가요?',
                 answers: [
-                    { text: '매우 불편하고 관계의 조화가 깨지는 것에 스트레스를 받는다.', score: 10 },
-                    { text: '중재자 역할을 하려 노력하거나, 상황을 피한다.', score: 5 },
-                    { text: '갈등은 자연스러운 것이라고 생각하고 관망한다.', score: 1 }
+                    { text: '매우 그렇다. 타인의 고통에 깊이 공감하고 아파한다.', score: 10 },
+                    { text: '어느 정도 그렇다. 하지만 감정을 억누르려 노력한다.', score: 5 },
+                    { text: '아니다. 이성적으로 상황을 판단하고 감정에 휩쓸리지 않는다.', score: 1 }
                 ]
             },
             {
-                question: '의미 없는 잡담이나 피상적인 대화만 계속될 때 당신은?',
+                question: '사람들이 자신의 감정을 솔직하게 표현하지 못할 때 당신은?',
                 answers: [
-                    { text: '정신적 에너지 소모를 느끼고 지루함을 느낀다.', score: 10 },
-                    { text: '어느 정도는 참여하지만, 깊이 있는 대화를 갈망한다.', score: 5 },
-                    { text: '어떤 대화든 즐겁게 참여하려고 노력한다.', score: 1 }
+                    { text: '안타까움을 느끼고 그들의 감정을 이해하려 노력하며, 표현을 돕는다.', score: 10 },
+                    { text: '그들의 감정을 존중하지만, 직접적인 개입은 하지 않는다.', score: 5 },
+                    { text: '각자의 방식대로 감정을 처리하는 것이라고 생각한다.', score: 1 }
                 ]
             },
             {
-                question: '당신은 어떤 상황에서 가장 큰 스트레스를 받나요?',
+                question: '당신은 어떤 종류의 사람을 가장 편안하게 느끼나요?',
                 answers: [
-                    { text: '나의 가치관과 신념이 무시당하거나 강요받는 상황.', score: 10 },
-                    { text: '피상적이고 의미 없는 관계.', score: 5 },
-                    { text: '예측 불가능한 갑작스러운 변화.', score: 1 }
+                    { text: '나의 감정을 깊이 이해하고 공감해주는 사람.', score: 10 },
+                    { text: '논리적이고 합리적으로 문제를 해결해주는 사람.', score: 5 },
+                    { text: '유쾌하고 활동적이며 즐거움을 주는 사람.', score: 1 }
                 ]
             }
         ];

@@ -5,6 +5,56 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>INFP 빙고 챌린지</title>
     <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251012150000">
+    <style>
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 5px;
+            width: 100%;
+            max-width: 600px; /* Adjust as needed */
+            margin: 20px auto;
+            border: 2px solid var(--card-border);
+            padding: 5px;
+            border-radius: 8px;
+            background-color: var(--card-bg);
+        }
+        .bingo-cell {
+            background-color: var(--container-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 10px;
+            min-height: 80px; /* Ensure cells are large enough */
+            cursor: pointer;
+            user-select: none;
+            transition: background-color 0.2s, border-color 0.2s;
+            font-size: 0.9em;
+            line-height: 1.3;
+        }
+        .bingo-cell.marked {
+            background-color: var(--nav-link-hover);
+            color: white;
+            border-color: var(--nav-link-hover);
+        }
+        .bingo-cell:hover:not(.marked) {
+            background-color: var(--card-border);
+        }
+        #bingo-message {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--success-color);
+            margin-top: 20px;
+            display: none;
+        }
+        .btn-bingo-reset {
+            display: block;
+            margin: 20px auto;
+        }
+    </style>
 </head>
 <body>
     <header class="main-nav">
@@ -17,153 +67,106 @@
             <button id="hamburger" class="hamburger">☰</button>
         </div>
     </header>
-    <div id="quiz-container" class="container">
-        <div id="start-area">
-            <h1>INFP 빙고 챌린지</h1>
-            <p>INFP 특징으로 구성된 빙고 게임</p>
-            <button id="start-btn" class="btn btn-primary">테스트 시작하기</button>
-        </div>
-
-        <div id="quiz-area" class="hidden">
-            <div class="progress-bar-container">
-                <div id="progress-bar"></div>
-            </div>
-            <div id="question"></div>
-            <div id="answers"></div>
-        </div>
-
-        <div id="result-area" class="hidden">
-            <div class="result-card">
-                <h2 id="result-title" class="result-title"></h2>
-                <p id="result-text"></p>
-                <button id="retry-btn" class="btn btn-primary">다시하기</button>
-            </div>
-        </div>
+    <div class="container">
+        <h1>INFP 빙고 챌린지</h1>
+        <p style="text-align:center;">INFP 특징으로 구성된 빙고 게임. 해당되는 항목을 클릭하여 빙고를 완성해 보세요!</p>
+        
+        <div id="bingo-grid" class="bingo-grid"></div>
+        <div id="bingo-message">빙고! 축하합니다!</div>
+        <button id="reset-bingo-btn" class="btn btn-primary btn-bingo-reset">다시 시작하기</button>
     </div>
 
     <script src="/u/tests/assets/js/main.js?20251012150000" defer></script>
     <script src="/u/tests/assets/js/dynamic-menu.js" defer></script>
     <script>
-        const quizContainer = document.getElementById('quiz-container');
-        const startArea = document.getElementById('start-area');
-        const quizArea = document.getElementById('quiz-area');
-        const resultArea = document.getElementById('result-area');
-        const startBtn = document.getElementById('start-btn');
-        const retryBtn = document.getElementById('retry-btn');
-        const questionEl = document.getElementById('question');
-        const answersEl = document.getElementById('answers');
-        const resultTitleEl = document.getElementById('result-title');
-        const resultTextEl = document.getElementById('result-text');
-        const progressBar = document.getElementById('progress-bar');
-
-        let currentQuestionIndex = 0;
-        let score = 0;
-
-        // Placeholder quiz data
-        const quizData = [
-            {
-                question: '이것은 INFP 빙고 챌린지의 첫 번째 질문입니다.',
-                answers: [
-                    { text: '답변 1', score: 10 },
-                    { text: '답변 2', score: 5 },
-                    { text: '답변 3', score: 1 }
-                ]
-            },
-            {
-                question: '이것은 두 번째 질문입니다.',
-                answers: [
-                    { text: '답변 A', score: 10 },
-                    { text: '답변 B', score: 5 },
-                    { text: '답변 C', score: 1 }
-                ]
-            }
+        const bingoItems = [
+            "하루 종일 몽상 가능",
+            "인간관계 손절 못하고 끙끙 앓음",
+            "나만의 확고한 신념과 가치관 있음",
+            "만약에..." 상상하다 하루 다 감",
+            "남의 감정이 내 감정 같음",
+            "계획은 완벽, 실천은 내일부터",
+            "혼자만의 동굴이 꼭 필요함",
+            "칭찬 받아도 "내가? 진짜?" 겸손/의심",
+            "모든 것에 의미 부여함",
+            "겉으로는 조용, 속으로는 시끄러움",
+            "그럴 수 있지" (속으로 100번 생각함)",
+            "세상의 모든 슬픔을 내가 다 짊어진 듯",
+            "다 너 잘되라고 하는 소리야" (진심 300%)",
+            "눈치는 빠른데 모르는 척함",
+            "상대방 말 한마디에 일주일 동안 고민함",
+            "나는 특별하지만, 동시에 평범하고 싶음",
+            "부탁 거절 못 해서 내가 다 함",
+            "꽂힌 노래/영화/책만 계속 봄",
+            "겉은 순둥, 속은 불의를 보면 못 참음",
+            "사소한 것에도 쉽게 감동받음",
+            "싸우기 싫어서 그냥 내가 미안하다고 함",
+            "사람은 왜 살까?" 같은 철학적 질문 좋아함",
+            "나에 대해 설명하는 거 세상에서 제일 어려움",
+            "최악의 상황을 먼저 상상하고 괴로워함",
+            "세상이 좀 더 아름다워졌으면 좋겠음"
         ];
 
-        startBtn.addEventListener('click', startQuiz);
-        retryBtn.addEventListener('click', startQuiz);
+        const bingoGridEl = document.getElementById('bingo-grid');
+        const bingoMessageEl = document.getElementById('bingo-message');
+        const resetBingoBtn = document.getElementById('reset-bingo-btn');
+        let markedCells = Array(25).fill(false);
 
-        function setInitialView() {
-            startArea.style.display = 'block';
-            quizArea.style.display = 'none';
-            resultArea.style.display = 'none';
-        }
-
-        function startQuiz() {
-            currentQuestionIndex = 0;
-            score = 0;
-            
-            resultTitleEl.innerText = '';
-            resultTextEl.innerText = '';
-            
-            startArea.style.display = 'none';
-            quizArea.style.display = 'block';
-            resultArea.style.display = 'none';
-            
-            showQuestion();
-        }
-
-        function showQuestion() {
-            updateProgressBar();
-            const currentQuestion = quizData[currentQuestionIndex];
-            questionEl.innerText = currentQuestion.question;
-            answersEl.innerHTML = '';
-            currentQuestion.answers.forEach(answer => {
-                const button = document.createElement('button');
-                button.innerText = answer.text;
-                button.addEventListener('click', (e) => selectAnswer(answer.score, e.target));
-                answersEl.appendChild(button);
-            });
-        }
-
-        function selectAnswer(answerScore, selectedButton) {
-            score += answerScore;
-            selectedButton.classList.add('selected');
-            
-            const answerButtons = answersEl.querySelectorAll('button');
-            answerButtons.forEach(button => button.disabled = true);
-
-            setTimeout(() => {
-                currentQuestionIndex++;
-                updateProgressBar();
-
-                if (currentQuestionIndex < quizData.length) {
-                    quizContainer.style.opacity = 0;
-                    setTimeout(() => {
-                        showQuestion();
-                        quizContainer.style.opacity = 1;
-                    }, 400);
-                } else {
-                    showResult();
-                }
-            }, 500);
-        }
-
-        function showResult() {
-            quizArea.style.display = 'none';
-            resultArea.style.display = 'block';
-            let resultTitle = '';
-            let resultMessage = '';
-            // Generic result based on score
-            if (score >= 15) {
-                resultTitle = '높은 점수';
-                resultMessage = '당신은 이 테스트에서 높은 점수를 받았습니다!';
-            } else if (score >= 10) {
-                resultTitle = '중간 점수';
-                resultMessage = '당신은 이 테스트에서 중간 점수를 받았습니다.';
-            } else {
-                resultTitle = '낮은 점수';
-                resultMessage = '당신은 이 테스트에서 낮은 점수를 받았습니다.';
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
             }
-            resultTitleEl.innerText = resultTitle;
-            resultTextEl.innerText = resultMessage;
+            return array;
         }
 
-        function updateProgressBar() {
-            const progress = (currentQuestionIndex / quizData.length) * 100;
-            progressBar.style.width = `${progress}%`;
+        function createBingoGrid() {
+            bingoGridEl.innerHTML = '';
+            const shuffledItems = shuffleArray([...bingoItems]); // Shuffle a copy
+            markedCells = Array(25).fill(false); // Reset marked cells
+
+            shuffledItems.forEach((item, index) => {
+                const cell = document.createElement('div');
+                cell.className = 'bingo-cell';
+                cell.textContent = item;
+                cell.dataset.index = index;
+                cell.addEventListener('click', toggleCellMarked);
+                bingoGridEl.appendChild(cell);
+            });
+            bingoMessageEl.style.display = 'none';
         }
 
-        setInitialView();
+        function toggleCellMarked(event) {
+            const cell = event.target;
+            const index = parseInt(cell.dataset.index);
+            markedCells[index] = !markedCells[index];
+            cell.classList.toggle('marked', markedCells[index]);
+            checkBingo();
+        }
+
+        function checkBingo() {
+            const lines = [
+                // Rows
+                [0, 1, 2, 3, 4], [5, 6, 7, 8, 9], [10, 11, 12, 13, 14], [15, 16, 17, 18, 19], [20, 21, 22, 23, 24],
+                // Columns
+                [0, 5, 10, 15, 20], [1, 6, 11, 16, 21], [2, 7, 12, 17, 22], [3, 8, 13, 18, 23], [4, 9, 14, 19, 24],
+                // Diagonals
+                [0, 6, 12, 18, 24], [4, 8, 12, 16, 20]
+            ];
+
+            for (const line of lines) {
+                if (line.every(index => markedCells[index])) {
+                    bingoMessageEl.style.display = 'block';
+                    return;
+                }
+            }
+            bingoMessageEl.style.display = 'none';
+        }
+
+        resetBingoBtn.addEventListener('click', createBingoGrid);
+
+        // Initialize on load
+        createBingoGrid();
     </script>
 </body>
 </html>
