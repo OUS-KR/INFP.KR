@@ -4,25 +4,58 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>오늘의 게임 - INFP</title>
-    <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251011000000">
+    <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251014190000">
     <style>
         .game-card-content {
             text-align: center;
+            padding: 20px;
+            background: linear-gradient(145deg, var(--background-color-light), var(--background-color));
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            margin-bottom: 20px;
         }
         .game-area {
             margin-top: 1.5em;
-            min-height: 150px;
+            min-height: 200px;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        .game-display {
-            margin-bottom: 1em;
+            justify-content: flex-start;
+            align-items: flex-start;
+            text-align: left;
+            padding: 1.5em;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            background-color: var(--background-color-light);
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+            line-height: 1.8;
             color: var(--text-color);
         }
-        .game-display.question {
-            font-size: 1.2em;
+        .game-area p {
+            margin-bottom: 0.8em;
+            line-height: 1.6;
+        }
+        #gameStats {
+            background-color: var(--secondary-color);
+            color: var(--text-color-inverted);
+            padding: 1em 1.5em;
+            border-radius: 10px;
+            margin-bottom: 1.5em;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            text-align: left;
+            font-size: 0.95em;
+            line-height: 1.5;
+        }
+        #gameStats p {
+            margin: 0.3em 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        #gameStats p b {
+            font-size: 1.1em;
+            color: var(--accent-color);
+        }
+        #gameStats span {
             font-weight: bold;
         }
         .choices {
@@ -30,62 +63,47 @@
             flex-direction: column;
             gap: 0.8em;
             width: 100%;
-            max-width: 400px;
-            margin: 0 auto;
+            max-width: 450px;
+            margin: 1.5em auto 0 auto;
         }
         .choice-btn {
-            padding: 0.8em 1em;
-            font-size: 1em;
+            padding: 1em 1.2em;
+            font-size: 1.05em;
             background-color: var(--primary-color);
             color: var(--text-color-inverted);
-            border: 1px solid var(--primary-color-dark);
-            border-radius: 4px;
+            border: none;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease;
+            transition: all 0.3s ease;
             width: 100%;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            text-align: left;
         }
         .choice-btn:hover {
             background-color: var(--primary-color-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 10px rgba(0, 0, 0, 0.2);
         }
-        .game-input {
-            margin-top: 1.5em;
-            margin-bottom: 1em;
-            width: 100%;
-            max-width: 400px;
-        }
-        .game-input input[type="text"] {
-            padding: 0.5em;
-            font-size: 1em;
-            width: 100%;
-            border: 2px solid var(--border-color, #ccc);
-            border-radius: 4px;
-            background-color: var(--input-bg-color);
-            color: var(--text-color);
-        }
-        .game-input button {
-            padding: 0.6em 1.5em;
-            font-size: 1.1em;
-            background-color: #007bff;
-            color: white;
-            border: 1px solid #0069d9;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            margin-top: 0.5em;
-        }
-        .game-input button:hover {
-            background-color: #0069d9;
+        .choice-btn:active {
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .feedback-message {
-            margin-top: 1em;
-            font-size: 1.2em;
+            margin-top: 1.5em;
+            font-size: 1.3em;
             font-weight: bold;
+            padding: 0.8em;
+            border-radius: 8px;
+            background-color: var(--background-color-light);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
         .feedback-message.correct {
             color: var(--success-color);
+            border: 1px solid var(--success-color);
         }
         .feedback-message.incorrect {
             color: var(--error-color);
+            border: 1px solid var(--error-color);
         }
     </style>
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4262871645049971" crossorigin="anonymous"></script>
@@ -116,6 +134,7 @@
         </div>
         
         <div class="card info-card game-card-content">
+            <div id="gameStats"></div>
             <div id="game-info">
                 <div id="gameTitle" class="card-title"></div>
                 <p id="gameDescription">게임을 불러오는 중...</p>
@@ -123,9 +142,11 @@
             <div id="gameArea" class="game-area">
                 <!-- Game content will be loaded here by JavaScript -->
             </div>
-            <div id="game-input-area">
-                <!-- Game input will be loaded here by JavaScript -->
+            <div id="gameChoices" class="choices">
+                <!-- Game choices will be loaded here by JavaScript -->
             </div>
+            <button id="nextDayBtn" class="choice-btn" style="margin-top: 20px;">다음날로 넘어가기 (오늘 5회 중 <span id="manualDayCounter">0</span>회)</button>
+            <button id="resetGameBtn" class="choice-btn" style="margin-top: 10px; background-color: var(--error-color); padding: 0.6em 1em; font-size: 0.9em; width: auto; align-self: center;">게임 초기화</button>
             <p id="feedbackMessage" class="feedback-message"></p>
         </div>
         
@@ -141,181 +162,8 @@
         </div>
     </div>
 
-    <script src="/u/tests/assets/js/main.js?20251011000000" defer></script>
-    <script src="/u/tests/assets/js/dynamic-menu.js" defer></script>
-    <script>
-    function getDailySeed() {
-        const today = new Date();
-        return today.getFullYear() * 10000 + (today.getMonth() + 1) * 100 + today.getDate();
-    }
-
-    function mulberry32(seed) {
-        return function() {
-            seed |= 0;
-            seed = seed + 0x6D2B79F5 | 0;
-            let t = Math.imul(seed ^ seed >>> 15, 1 | seed);
-            t = t + Math.imul(t ^ t >>> 7, 61 | t) | 0;
-            return ((t ^ t >>> 14) >>> 0) / 4294967296;
-        }
-    }
-
-    let currentCorrectAnswer = null;
-    let currentRandFn = null;
-    let gameInProgress = false;
-
-    // --- Game Implementations for INFP ---
-
-    // Game 0: Empathy Choice
-    function setupEmpathyChoiceGame() {
-        document.getElementById('gameTitle').innerText = "오늘의 게임: 공감 선택";
-        const gameArea = document.getElementById('gameArea');
-        const scenarios = [
-            { q: "친구가 아끼던 펜을 잃어버렸습니다. 뭐라고 위로해 주시겠어요?", a: ["새로 사면 되지.", "정말 속상하겠다. 같이 찾아볼까?", "어디서 잃어버렸는데?"], correct: 1 },
-            { q: "동료가 발표를 망쳐서 우울해합니다. 어떤 말을 해주시겠어요?", a: ["다음에 잘하면 돼. 너무 신경 쓰지 마.", "많이 준비했는데 아쉽네. 커피 한잔할까?", "어떤 부분이 부족했던 것 같아?"], correct: 1 }
-        ];
-        const scenario = scenarios[Math.floor(currentRandFn() * scenarios.length)];
-        currentCorrectAnswer = scenario.correct;
-        gameArea.innerHTML = `
-            <div class="game-display question">${scenario.q}</div>
-            <div class="choices">
-                ${scenario.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
-            </div>
-        `;
-        document.getElementById('game-input-area').innerHTML = '';
-        gameInProgress = true;
-    }
-
-    // Game 1: Ideal Values Choice Quiz
-    function setupIdealValuesChoiceQuiz() {
-        document.getElementById('gameTitle').innerText = "오늘의 게임: 이상적 가치관 선택 퀴즈";
-        const gameArea = document.getElementById('gameArea');
-        const scenarios = [
-            { q: "세상을 더 나은 곳으로 만들기 위해 당신이 할 수 있는 가장 중요한 일은?", a: ["개인의 변화를 통해 사회에 긍정적인 영향을 미친다.", "사회 운동에 적극적으로 참여하여 변화를 이끌어낸다.", "현실적인 문제 해결에 집중한다."], correct: 0 },
-            { q: "부당한 상황을 목격했을 때, 당신의 내면은 어떻게 반응하나요?", a: ["분노하며 즉시 행동에 나선다.", "깊은 슬픔과 함께 변화를 위한 방법을 고민한다.", "현실적인 한계를 인정하고 받아들인다."], correct: 1 },
-            { q: "당신에게 '성공'이란 무엇인가요?", a: ["사회적으로 인정받는 지위와 부.", "자신의 가치와 신념에 따라 살아가는 삶.", "타인에게 긍정적인 영향을 미치는 것."], correct: 1 }
-        ];
-        const scenario = scenarios[Math.floor(currentRandFn() * scenarios.length)];
-        currentCorrectAnswer = scenario.correct;
-        gameArea.innerHTML = `
-            <div class="game-display question">${scenario.q}</div>
-            <div class="choices">
-                ${scenario.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
-            </div>
-        `;
-        document.getElementById('game-input-area').innerHTML = '';
-        gameInProgress = true;
-    }
-
-    // Game 2: Emotional Scenario Empathy Quiz
-    function setupEmotionalScenarioEmpathyQuiz() {
-        document.getElementById('gameTitle').innerText = "오늘의 게임: 감성적 시나리오 공감 퀴즈";
-        const gameArea = document.getElementById('gameArea');
-        const scenarios = [
-            { q: "오래된 일기장을 발견했습니다. 그 안에는 잊고 있던 꿈과 희망이 담겨 있습니다. 당신의 감정은?", a: ["아련한 그리움과 새로운 영감.", "과거에 대한 후회와 아쉬움.", "현실과의 괴리감과 좌절."], correct: 0 },
-            { q: "숲 속을 걷다가 우연히 작은 새가 둥지에서 떨어져 있는 것을 발견했습니다. 당신의 감정은?", a: ["안타까움과 보호해주고 싶은 마음.", "자연의 섭리이니 개입하지 않는다.", "사진을 찍어 SNS에 공유한다."], correct: 0 },
-            { q: "밤하늘의 수많은 별들을 바라보고 있습니다. 당신의 감정은?", a: ["광활한 우주에 대한 경외감과 나의 존재에 대한 성찰.", "아름답지만 나와는 상관없는 풍경.", "별자리를 찾아보고 싶다."], correct: 0 }
-        ];
-        const scenario = scenarios[Math.floor(currentRandFn() * scenarios.length)];
-        currentCorrectAnswer = scenario.correct;
-        gameArea.innerHTML = `
-            <div class="game-display question">${scenario.q}</div>
-            <div class="choices">
-                ${scenario.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
-            </div>
-        `;
-        document.getElementById('game-input-area').innerHTML = '';
-        gameInProgress = true;
-    }
-
-    // Game 3: Inner Voice Choice Quiz
-    function setupInnerVoiceChoiceQuiz() {
-        document.getElementById('gameTitle').innerText = "오늘의 게임: 내면의 목소리 선택 퀴즈";
-        const gameArea = document.getElementById('gameArea');
-        const scenarios = [
-            { q: "친구가 부당한 비판을 받고 있습니다. 당신의 내면의 목소리는?", a: ["친구의 편에 서서 함께 분노한다.", "친구의 감정을 이해하고 조용히 지지한다.", "상황을 객관적으로 분석하고 해결책을 제시한다."], correct: 1 },
-            { q: "당신이 옳다고 믿는 가치가 사회적으로 인정받지 못하고 있습니다. 당신의 내면의 목소리는?", a: ["내 신념을 굽히지 않고 묵묵히 나아간다.", "사회적 흐름에 맞춰 내 가치를 수정한다.", "다른 사람들에게 내 가치를 적극적으로 설득한다."], correct: 0 },
-            { q: "새로운 도전을 앞두고 두려움과 설렘이 공존합니다. 당신의 내면의 목소리는?", a: ["두려워 말고 용기 있게 나아가라.", "신중하게 모든 가능성을 검토하라.", "지금은 때가 아니니 기다려라."], correct: 0 }
-        ];
-        const scenario = scenarios[Math.floor(currentRandFn() * scenarios.length)];
-        currentCorrectAnswer = scenario.correct;
-        gameArea.innerHTML = `
-            <div class="game-display question">${scenario.q}</div>
-            <div class="choices">
-                ${scenario.a.map((choice, index) => `<button class="choice-btn" data-index="${index}">${choice}</button>`).join('')}
-            </div>
-        `;
-        document.getElementById('game-input-area').innerHTML = '';
-        gameInProgress = true;
-    }
-
-    // --- Game Dispatcher and Common Logic ---
-    const gameTypes = [
-        setupEmpathyChoiceGame,
-        setupIdealValuesChoiceQuiz,
-        setupEmotionalScenarioEmpathyQuiz,
-        setupInnerVoiceChoiceQuiz
-    ];
-
-    function getDayOfWeekText(day) {
-        const messages = [
-            "일요일의 마무리, 당신의 내면을 들여다보는 시간을 가져보세요.", // Sunday
-            "새로운 한 주, 당신의 따뜻한 마음으로 세상을 밝혀주세요.", // Monday
-            "오늘은 당신의 깊은 공감 능력이 필요한 날입니다.", // Tuesday
-            "주 중반, 잠시 몽상에 빠져보는 건 어떨까요?", // Wednesday
-            "당신의 이상이 세상을 더 나은 곳으로 만듭니다.", // Thursday
-            "주말을 앞둔 금요일, 창의적인 영감을 떠올려 보세요.", // Friday
-            "여유로운 토요일, 아름다운 것들을 감상하며 하루를 보내세요.", // Saturday
-        ];
-        return messages[day];
-    }
-
-    function showFeedback(isCorrect, message) {
-        const feedbackMessage = document.getElementById('feedbackMessage');
-        if (isCorrect) {
-            feedbackMessage.innerText = message || "정답입니다! 역시 INFP, 따뜻한 마음과 창의력을 지니셨군요.";
-            feedbackMessage.className = "feedback-message correct";
-        } else {
-            feedbackMessage.innerText = message || "아쉽네요. 당신의 마음이 이끄는 대로 다시 생각해 보세요.";
-            feedbackMessage.className = "feedback-message incorrect";
-        }
-        gameInProgress = false;
-    }
-
-    function handleChoiceClick(event) {
-        if (!gameInProgress) return;
-        const selectedIndex = parseInt(event.target.getAttribute('data-index'));
-        showFeedback(selectedIndex === currentCorrectAnswer);
-        document.querySelectorAll('.choice-btn').forEach(btn => btn.disabled = true);
-    }
-
-    function initDailyGame() {
-        const today = new Date();
-        const seed = getDailySeed();
-        currentRandFn = mulberry32(seed);
-        
-        const dayOfWeek = today.getDay();
-        document.getElementById('gameDescription').innerText = getDayOfWeekText(dayOfWeek);
-
-        const gameTypeIndex = Math.floor(currentRandFn() * gameTypes.length + dayOfWeek) % gameTypes.length;
-        gameTypes[gameTypeIndex]();
-
-        document.getElementById('feedbackMessage').innerText = '';
-        document.getElementById('feedbackMessage').className = "feedback-message";
-        
-        // Add event listeners after creating the elements
-        document.querySelectorAll('.choice-btn').forEach(btn => {
-            btn.addEventListener('click', handleChoiceClick);
-        });
-    }
-
-    window.onload = function() {
-        try {
-            initDailyGame();
-        } catch (e) {
-            console.error("오늘의 게임 생성 중 오류 발생:", e);
-            document.getElementById('gameDescription').innerText = "콘텐츠를 불러오는 데 실패했습니다. 페이지를 새로고침해 주세요.";
-        }
-    };
-    </script>
+    <script src="/u/tests/assets/js/main.js?20251014190000" defer></script>
+    <script src="/u/tests/assets/js/dynamic-menu.js?20251014190000" defer></script>
+    <script src="/u/tests/assets/js/today-game.js?20251014190000" defer></script>
 </body>
 </html>
