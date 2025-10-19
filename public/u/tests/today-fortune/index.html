@@ -69,9 +69,49 @@
                 (adsbygoogle = window.adsbygoogle || []).push({});
             </script>
         </div>
+        
+        <div id="giscus-container" style="margin: 15px 0;"></div>
+        <script>
+            function loadGiscus() {
+                const container = document.getElementById('giscus-container');
+                while (container.firstChild) container.removeChild(container.firstChild);
+                
+                const script = document.createElement('script');
+                script.src = 'https://giscus.app/client.js';
+                script.setAttribute('data-repo', 'OUS-KR/INTP.KR');
+                script.setAttribute('data-repo-id', 'R_kgDOOrfScQ');
+                script.setAttribute('data-category', 'Announcements');
+                script.setAttribute('data-category-id', 'DIC_kwDOOrfScc4CqQAN');
+                script.setAttribute('data-mapping', 'pathname');
+                script.setAttribute('data-strict', '0');
+                script.setAttribute('data-reactions-enabled', '1');
+                script.setAttribute('data-emit-metadata', '1');
+                script.setAttribute('data-input-position', 'top');
+                script.setAttribute('data-theme', localStorage.getItem('theme') ?? 'light');
+                script.setAttribute('data-loading', 'lazy');
+                script.setAttribute('data-lang', 'ko');
+                script.setAttribute('crossorigin', 'anonymous');
+                script.setAttribute('async', '');
+                
+                container.appendChild(script);
+            }
+            
+            loadGiscus();
+        </script>
+        
+        <div class="content-card">
+            <ins class="adsbygoogle"
+                style="display:block"
+                data-ad-format="autorelaxed"
+                data-ad-client="ca-pub-4262871645049971"
+                data-ad-slot="5813041058"></ins>
+            <script>
+                (adsbygoogle = window.adsbygoogle || []).push({});
+            </script>
+        </div>
     </div>
 
-    <script src="/u/tests/assets/js/main.js?20251010170000" defer></script>
+    <script src="/u/tests/assets/js/main.js?20251020100000" defer></script>
     <script src="/u/tests/assets/js/dynamic-menu.js?20251010170000" defer></script>
     <script>
     function getDailySeed() {
@@ -113,14 +153,14 @@
         return hasBatchim ? particles[0] : particles[1];
     }
 
-    // --- Enhanced Generative Data Parts ---
+    // --- Enhanced Generative Data Parts (INFP) ---
     const data = {
         advice: {
             openings: ["오늘은", "오늘 당신의", "지금은", "오늘은 특별히"],
-            subjects: ["당신의 따뜻한 공감 능력이", "진정성을 추구하는 마음이", "풍부한 상상력과 창의성이", "조화와 평화를 중시하는 성향이", "자신만의 확고한 신념이"],
-            verbs: ["상처받은 마음을 치유하는 힘이 있습니다.", "당신을 가장 올바른 길로 안내할 것입니다.", "일상에 새로운 의미와 아름다움을 더해줍니다.", "주변의 갈등을 해결하는 열쇠가 될 수 있습니다.", "어려운 상황에서도 당신을 지탱해 줄 것입니다."],
+            subjects: ["진정성을 추구하는 마음이", "풍부한 상상력과 창의성이", "내면의 목소리에 귀 기울이는 시간이", "따뜻한 공감 능력이", "확고한 신념이"],
+            verbs: ["당신을 가장 올바른 길로 안내할 것입니다.", "일상에 새로운 의미와 아름다움을 더해줍니다.", "스스로에게 따뜻한 위로가 되어줄 거예요.", "주변 사람들에게 긍정적인 영향을 줍니다.", "어려운 상황에서도 당신을 지탱해 줄 것입니다."],
             connectors: ["그러니", "이 기회를 활용해", "자신감을 갖고", "망설이지 말고"],
-            actions: ["당신의 감정을 솔직하게 표현하는 시간을 가져보세요.", "당신이 가치 있다고 믿는 일을 위해 작은 행동을 시작해 보세요.", "아름다운 음악을 듣거나, 시를 읽으며 감수성을 채워보세요.", "의견이 다른 사람의 입장을 이해하려고 노력해 보세요.", "혼자만의 시간을 가지며 내면의 목소리에 집중해 보세요."]
+            actions: ["당신의 감정을 솔직하게 표현하는 시간을 가져보세요.", "아름다운 음악을 듣거나, 시를 읽으며 감수성을 채워보세요.", "혼자만의 시간을 가지며 내면의 목소리에 집중해 보세요.", "당신이 가치 있다고 믿는 일을 위해 작은 행동을 시작해 보세요.", "의견이 다른 사람의 입장을 이해하려고 노력해 보세요."]
         },
         task: {
             types: ["상상하기:", "공감하기:", "표현하기:", "탐색하기:"],
@@ -132,7 +172,7 @@
             reasons: ["내면의 진실한 가치가 빛을 발하여", "타인의 감정에 깊이 공감하는 능력이 발휘되어", "풍부한 상상력이 현실의 경계를 넘어", "조화로운 세상을 향한 신념이 확고해져"],
             results: ["가장 자기다운 선택을 할 수 있습니다.", "주변 사람들에게 따뜻한 위로와 이해를 줍니다.", "독창적이고 아름다운 아이디어를 떠올릴 수 있습니다.", "갈등 상황에서 평화로운 해결책을 찾을 수 있습니다."]
         },
-        keywords: ["이상주의", "진정성", "공감", "창의성", "중재자", "탐험가", "낭만적인", "이타적인", "내향적", "직관적", "감정적", "인식적", "가치", "신념", "조화", "이해심", "적응력", "상상력"]
+        keywords: ["이상주의", "진정성", "공감", "창의성", "중재자", "상상력", "가치", "신념", "조화"]
     };
 
     // --- Generator Functions ---
