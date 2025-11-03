@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFP 빙고 챌린지</title>
+    <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251012150000">
+    <style>
+        .bingo-container {
+            overflow-x: auto;
+            padding-bottom: 10px; /* Make space for scrollbar */
+        }
+        .bingo-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 10px;
+            margin: 30px 0;
+            min-width: 500px; /* Prevent tiles from becoming too small */
+        }
+        .bingo-cell {
+            background-color: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 8px;
+            aspect-ratio: 1 / 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 0.9em;
+            padding: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, color 0.3s;
+            user-select: none;
+        }
+        .bingo-cell.checked {
+            background-color: var(--h-color);
+            color: var(--container-bg);
+            font-weight: bold;
+        }
+        .bingo-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        #bingo-counter {
+            font-size: 1.2em;
+            font-weight: bold;
+        }
+        #reset-btn {
+            padding: 8px 15px;
+            font-size: 0.9em;
+            background-color: var(--card-border);
+            color: var(--text-color);
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    </style>
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4262871645049971" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="main-nav">
+        <a href="/u/tests/" class="logo">INFP.KR Tests</a>
+        <div class="nav-right-section">
+            <nav class="nav-links" id="nav-links"></nav>
+            <button id="theme-switcher" class="theme-switcher">🌙</button>
+            <button id="hamburger" class="hamburger">☰</button>
+        </div>
+    </header>
+    <div class="container">
+        <h1>INFP 빙고 챌린지</h1>
+        <p style="text-align:center;">나는 얼마나 INFP일까? 아래 빙고판에서 해당하는 항목을 클릭해 보세요.<br>완성된 빙고판을 캡쳐해서 친구들과 공유해 보세요!</p>
+        
+        <div class="bingo-controls">
+            <div id="bingo-counter">체크된 항목 0/25</div>
+            <button id="reset-btn">초기화</button>
+        </div>
+        
+        <div class="bingo-container">
+            <div class="bingo-grid" id="bingo-grid">
+                <!-- Bingo items will be inserted here by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <script src="/u/tests/assets/js/main.js?20251012150000" defer></script>
+    <script src="/u/tests/assets/js/dynamic-menu.js" defer></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const bingoGrid = document.getElementById('bingo-grid');
+            const bingoCounter = document.getElementById('bingo-counter');
+            const resetBtn = document.getElementById('reset-btn');
+            let checkedCount = 0;
+
+            const bingoItems = [
+                "하루 종일 몽상 가능",
+                "인간관계 손절 못하고 끙끙 앓음",
+                "나만의 확고한 신념과 가치관 있음",
+                "\"만약에...\" 상상하다 하루 다 감",
+                "남의 감정이 내 감정 같음",
+                "계획은 완벽, 실천은 내일부터",
+                "혼자만의 동굴이 꼭 필요함",
+                "칭찬 받아도 \"내가? 진짜?\" 겸손/의심",
+                "모든 것에 의미 부여함",
+                "겉으로는 조용, 속으로는 시끄러움",
+                "\"그럴 수 있지\" (속으로 100번 생각함)",
+                "세상의 모든 슬픔을 내가 다 짊어진 듯",
+                "\"다 너 잘되라고 하는 소리야\" (진심 300%)",
+                "눈치는 빠른데 모르는 척함",
+                "상대방 말 한마디에 일주일 동안 고민함",
+                "나는 특별하지만, 동시에 평범하고 싶음",
+                "부탁 거절 못 해서 내가 다 함",
+                "꽂힌 노래/영화/책만 계속 봄",
+                "겉은 순둥, 속은 불의를 보면 못 참음",
+                "사소한 것에도 쉽게 감동받음",
+                "싸우기 싫어서 그냥 내가 미안하다고 함",
+                "\"사람은 왜 살까?\" 같은 철학적 질문 좋아함",
+                "나에 대해 설명하는 거 세상에서 제일 어려움",
+                "최악의 상황을 먼저 상상하고 괴로워함",
+                "세상이 좀 더 아름다워졌으면 좋겠음"
+            ];
+
+            // Create bingo cells
+            bingoItems.forEach(itemText => {
+                const cell = document.createElement('div');
+                cell.classList.add('bingo-cell');
+                cell.textContent = itemText;
+                bingoGrid.appendChild(cell);
+
+                cell.addEventListener('click', () => {
+                    cell.classList.toggle('checked');
+                    updateCounter();
+                });
+            });
+
+            // Reset button logic
+            resetBtn.addEventListener('click', () => {
+                const checkedCells = document.querySelectorAll('.bingo-cell.checked');
+                checkedCells.forEach(cell => {
+                    cell.classList.remove('checked');
+                });
+                updateCounter();
+            });
+
+            function updateCounter() {
+                checkedCount = document.querySelectorAll('.bingo-cell.checked').length;
+                bingoCounter.textContent = `체크된 항목 ${checkedCount}/25`;
+            }
+        });
+    </script>
+</body>
+</html>

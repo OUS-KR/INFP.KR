@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFP 감성적 공감 능력 테스트</title>
+    <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251012150000">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4262871645049971" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="main-nav">
+        <a href="/u/tests/" class="logo">INFP.KR Tests</a>
+        <div class="nav-right-section">
+            <nav class="nav-links" id="nav-links">
+                <!-- Dynamic menu will be loaded here by dynamic-menu.js -->
+            </nav>
+            <button id="theme-switcher" class="theme-switcher">🌙</button>
+            <button id="hamburger" class="hamburger">☰</button>
+        </div>
+    </header>
+    <div id="quiz-container" class="container">
+        <div id="start-area">
+            <h1>INFP 감성적 공감 능력 테스트</h1>
+            <p>당신은 타인의 감정을 자신의 것처럼 느끼고 깊이 공감하는 사람인가요? INFP의 뛰어난 공감 능력을 통해 타인의 감정을 이해하고 반응하는 당신의 방식을 이 테스트를 통해 측정해 보세요!</p>
+            <button id="start-btn" class="btn btn-primary">테스트 시작하기</button>
+        </div>
+
+        <div id="quiz-area" class="hidden">
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="question"></div>
+            <div id="answers"></div>
+        </div>
+
+        <div id="result-area" class="hidden">
+            <div class="result-card">
+                <h2 id="result-title" class="result-title"></h2>
+                <p id="result-text"></p>
+                <button id="retry-btn" class="btn btn-primary">다시하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/u/tests/assets/js/main.js?20251012150000" defer></script>
+    <script src="/u/tests/assets/js/dynamic-menu.js" defer></script>
+    <script>
+        const quizContainer = document.getElementById('quiz-container');
+        const startArea = document.getElementById('start-area');
+        const quizArea = document.getElementById('quiz-area');
+        const resultArea = document.getElementById('result-area');
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const questionEl = document.getElementById('question');
+        const answersEl = document.getElementById('answers');
+        const resultTitleEl = document.getElementById('result-title');
+        const resultTextEl = document.getElementById('result-text');
+        const progressBar = document.getElementById('progress-bar');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        const quizData = [
+            {
+                question: '친구가 슬퍼할 때 당신의 반응은?',
+                answers: [
+                    { text: '함께 슬퍼하고 진심으로 위로하며, 친구의 감정을 공유한다.', score: 10 },
+                    { text: '친구의 이야기를 들어주고 공감하지만, 감정에 휩쓸리지는 않는다.', score: 5 },
+                    { text: '친구에게 해결책을 제시하거나, 기분 전환을 제안한다.', score: 1 }
+                ]
+            },
+            {
+                question: '영화나 소설 속 인물의 감정에 깊이 몰입하여 현실처럼 느끼나요?',
+                answers: [
+                    { text: '매우 그렇다. 가상의 인물에게도 깊이 공감하며 감정 이입이 잘 된다.', score: 10 },
+                    { text: '가끔 그렇다. 특히 감동적인 장면에서는 몰입한다.', score: 5 },
+                    { text: '아니다. 현실과 가상을 명확히 구분하는 편이다.', score: 1 }
+                ]
+            },
+            {
+                question: '타인의 고통을 보면 나도 모르게 눈물이 나거나 마음이 아픈가요?',
+                answers: [
+                    { text: '매우 그렇다. 타인의 고통에 깊이 공감하고 아파한다.', score: 10 },
+                    { text: '어느 정도 그렇다. 하지만 감정을 억누르려 노력한다.', score: 5 },
+                    { text: '아니다. 이성적으로 상황을 판단하고 감정에 휩쓸리지 않는다.', score: 1 }
+                ]
+            },
+            {
+                question: '사람들이 자신의 감정을 솔직하게 표현하지 못할 때 당신은?',
+                answers: [
+                    { text: '안타까움을 느끼고 그들의 감정을 이해하려 노력하며, 표현을 돕는다.', score: 10 },
+                    { text: '그들의 감정을 존중하지만, 직접적인 개입은 하지 않는다.', score: 5 },
+                    { text: '각자의 방식대로 감정을 처리하는 것이라고 생각한다.', score: 1 }
+                ]
+            },
+            {
+                question: '당신은 어떤 종류의 사람을 가장 편안하게 느끼나요?',
+                answers: [
+                    { text: '나의 감정을 깊이 이해하고 공감해주는 사람.', score: 10 },
+                    { text: '논리적이고 합리적으로 문제를 해결해주는 사람.', score: 5 },
+                    { text: '유쾌하고 활동적이며 즐거움을 주는 사람.', score: 1 }
+                ]
+            }
+        ];
+
+        startBtn.addEventListener('click', startQuiz);
+        retryBtn.addEventListener('click', startQuiz);
+
+        function setInitialView() {
+            startArea.style.display = 'block';
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'none';
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            resultTitleEl.innerText = '';
+            resultTextEl.innerText = '';
+            
+            startArea.style.display = 'none';
+            quizArea.style.display = 'block';
+            resultArea.style.display = 'none';
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            updateProgressBar();
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionEl.innerText = currentQuestion.question;
+            answersEl.innerHTML = '';
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer.text;
+                button.addEventListener('click', (e) => selectAnswer(answer.score, e.target));
+                answersEl.appendChild(button);
+            });
+        }
+
+        function selectAnswer(answerScore, selectedButton) {
+            score += answerScore;
+            selectedButton.classList.add('selected');
+            
+            const answerButtons = answersEl.querySelectorAll('button');
+            answerButtons.forEach(button => button.disabled = true);
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                updateProgressBar();
+
+                if (currentQuestionIndex < quizData.length) {
+                    quizContainer.style.opacity = 0;
+                    setTimeout(() => {
+                        showQuestion();
+                        quizContainer.style.opacity = 1;
+                    }, 400);
+                } else {
+                    showResult();
+                }
+            }, 500);
+        }
+
+        function showResult() {
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'block';
+            let resultTitle = '';
+            let resultMessage = '';
+            // Generic result based on score
+            if (score >= 15) {
+                resultTitle = '높은 점수';
+                resultMessage = '당신은 이 테스트에서 높은 점수를 받았습니다!';
+            } else if (score >= 10) {
+                resultTitle = '중간 점수';
+                resultMessage = '당신은 이 테스트에서 중간 점수를 받았습니다.';
+            } else {
+                resultTitle = '낮은 점수';
+                resultMessage = '당신은 이 테스트에서 낮은 점수를 받았습니다.';
+            }
+            resultTitleEl.innerText = resultTitle;
+            resultTextEl.innerText = resultMessage;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        setInitialView();
+    </script>
+</body>
+</html>

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFP 이상적인 세계관 테스트</title>
+    <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251012150000">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4262871645049971" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="main-nav">
+        <a href="/u/tests/" class="logo">INFP.KR Tests</a>
+        <div class="nav-right-section">
+            <nav class="nav-links" id="nav-links">
+                <!-- Dynamic menu will be loaded here by dynamic-menu.js -->
+            </nav>
+            <button id="theme-switcher" class="theme-switcher">🌙</button>
+            <button id="hamburger" class="hamburger">☰</button>
+        </div>
+    </header>
+    <div id="quiz-container" class="container">
+        <div id="start-area">
+            <h1>INFP 이상적인 세계관 테스트</h1>
+            <p>당신은 세상을 더 나은 곳으로 만들고 싶은 이상주의자인가요? INFP의 이상주의적 가치관과 사회적 신념을 이 테스트를 통해 측정해 보세요!</p>
+            <button id="start-btn" class="btn btn-primary">테스트 시작하기</button>
+        </div>
+
+        <div id="quiz-area" class="hidden">
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="question"></div>
+            <div id="answers"></div>
+        </div>
+
+        <div id="result-area" class="hidden">
+            <div class="result-card">
+                <h2 id="result-title" class="result-title"></h2>
+                <p id="result-text"></p>
+                <button id="retry-btn" class="btn btn-primary">다시하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/u/tests/assets/js/main.js?20251012150000" defer></script>
+    <script src="/u/tests/assets/js/dynamic-menu.js" defer></script>
+    <script>
+        const quizContainer = document.getElementById('quiz-container');
+        const startArea = document.getElementById('start-area');
+        const quizArea = document.getElementById('quiz-area');
+        const resultArea = document.getElementById('result-area');
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const questionEl = document.getElementById('question');
+        const answersEl = document.getElementById('answers');
+        const resultTitleEl = document.getElementById('result-title');
+        const resultTextEl = document.getElementById('result-text');
+        const progressBar = document.getElementById('progress-bar');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Placeholder quiz data
+        const quizData = [
+            {
+                question: '세상의 부조리나 불의를 보면 마음이 아프고, 이를 바꾸고 싶다는 생각이 드나요?',
+                answers: [
+                    { text: '매우 그렇다. 세상의 불의를 보면 참을 수 없다.', score: 10 },
+                    { text: '어느 정도 그렇다. 하지만 내가 할 수 있는 일은 제한적이라고 생각한다.', score: 5 },
+                    { text: '아니다. 세상은 원래 그런 것이라고 생각하고 받아들인다.', score: 1 }
+                ]
+            },
+            {
+                question: '모든 사람은 선한 마음을 가지고 있다고 믿나요?',
+                answers: [
+                    { text: '매우 그렇다. 인간의 본성은 선하다고 믿는다.', score: 10 },
+                    { text: '어느 정도 그렇다. 하지만 악한 사람도 존재한다고 생각한다.', score: 5 },
+                    { text: '아니다. 인간은 이기적인 존재라고 생각한다.', score: 1 }
+                ]
+            },
+            {
+                question: '작은 친절 하나가 세상을 바꿀 수 있다고 생각하나요?',
+                answers: [
+                    { text: '매우 그렇다. 작은 행동이 큰 변화를 만들 수 있다고 믿는다.', score: 10 },
+                    { text: '어느 정도 그렇다. 하지만 큰 변화를 위해서는 더 많은 노력이 필요하다.', score: 5 },
+                    { text: '아니다. 세상은 쉽게 변하지 않는다고 생각한다.', score: 1 }
+                ]
+            },
+            {
+                question: '경쟁에서 이기는 것보다 모두가 행복한 세상을 꿈꾸나요?',
+                answers: [
+                    { text: '매우 그렇다. 경쟁보다는 조화와 협력을 통해 모두가 행복한 세상을 만들고 싶다.', score: 10 },
+                    { text: '어느 정도 그렇다. 하지만 현실적으로 경쟁은 피할 수 없다고 생각한다.', score: 5 },
+                    { text: '아니다. 경쟁을 통해 더 나은 결과를 얻을 수 있다고 생각한다.', score: 1 }
+                ]
+            },
+            {
+                question: '당신은 어떤 종류의 사회 운동에 가장 큰 관심을 가지나요?',
+                answers: [
+                    { text: '인권, 환경 보호, 동물 복지 등 약자를 돕고 세상을 더 나은 곳으로 만드는 운동.', score: 10 },
+                    { text: '경제 성장, 기술 혁신 등 사회 발전을 위한 운동.', score: 5 },
+                    { text: '전통과 질서를 유지하고 사회 안정을 추구하는 운동.', score: 1 }
+                ]
+            }
+        ];
+
+        startBtn.addEventListener('click', startQuiz);
+        retryBtn.addEventListener('click', startQuiz);
+
+        function setInitialView() {
+            startArea.style.display = 'block';
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'none';
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            resultTitleEl.innerText = '';
+            resultTextEl.innerText = '';
+            
+            startArea.style.display = 'none';
+            quizArea.style.display = 'block';
+            resultArea.style.display = 'none';
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            updateProgressBar();
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionEl.innerText = currentQuestion.question;
+            answersEl.innerHTML = '';
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer.text;
+                button.addEventListener('click', (e) => selectAnswer(answer.score, e.target));
+                answersEl.appendChild(button);
+            });
+        }
+
+        function selectAnswer(answerScore, selectedButton) {
+            score += answerScore;
+            selectedButton.classList.add('selected');
+            
+            const answerButtons = answersEl.querySelectorAll('button');
+            answerButtons.forEach(button => button.disabled = true);
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                updateProgressBar();
+
+                if (currentQuestionIndex < quizData.length) {
+                    quizContainer.style.opacity = 0;
+                    setTimeout(() => {
+                        showQuestion();
+                        quizContainer.style.opacity = 1;
+                    }, 400);
+                } else {
+                    showResult();
+                }
+            }, 500);
+        }
+
+        function showResult() {
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'block';
+            let resultTitle = '';
+            let resultMessage = '';
+            // Generic result based on score
+            if (score >= 15) {
+                resultTitle = '높은 점수';
+                resultMessage = '당신은 이 테스트에서 높은 점수를 받았습니다!';
+            } else if (score >= 10) {
+                resultTitle = '중간 점수';
+                resultMessage = '당신은 이 테스트에서 중간 점수를 받았습니다.';
+            } else {
+                resultTitle = '낮은 점수';
+                resultMessage = '당신은 이 테스트에서 낮은 점수를 받았습니다.';
+            }
+            resultTitleEl.innerText = resultTitle;
+            resultTextEl.innerText = resultMessage;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        setInitialView();
+    </script>
+</body>
+</html>

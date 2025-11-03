@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFP 창의적 상상력 테스트</title>
+    <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251012150000">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4262871645049971" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="main-nav">
+        <a href="/u/tests/" class="logo">INFP.KR Tests</a>
+        <div class="nav-right-section">
+            <nav class="nav-links" id="nav-links">
+                <!-- Dynamic menu will be loaded here by dynamic-menu.js -->
+            </nav>
+            <button id="theme-switcher" class="theme-switcher">🌙</button>
+            <button id="hamburger" class="hamburger">☰</button>
+        </div>
+    </header>
+    <div id="quiz-container" class="container">
+        <div id="start-area">
+            <h1>INFP 창의적 상상력 테스트</h1>
+            <p>당신은 현실을 넘어 새로운 이야기를 만들어내는 독창적인 상상력의 소유자인가요? INFP의 풍부한 내면세계와 창의력을 이 테스트를 통해 측정해 보세요!</p>
+            <button id="start-btn" class="btn btn-primary">테스트 시작하기</button>
+        </div>
+
+        <div id="quiz-area" class="hidden">
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="question"></div>
+            <div id="answers"></div>
+        </div>
+
+        <div id="result-area" class="hidden">
+            <div class="result-card">
+                <h2 id="result-title" class="result-title"></h2>
+                <p id="result-text"></p>
+                <button id="retry-btn" class="btn btn-primary">다시하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/u/tests/assets/js/main.js?20251012150000" defer></script>
+    <script src="/u/tests/assets/js/dynamic-menu.js" defer></script>
+    <script>
+        const quizContainer = document.getElementById('quiz-container');
+        const startArea = document.getElementById('start-area');
+        const quizArea = document.getElementById('quiz-area');
+        const resultArea = document.getElementById('result-area');
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const questionEl = document.getElementById('question');
+        const answersEl = document.getElementById('answers');
+        const resultTitleEl = document.getElementById('result-title');
+        const resultTextEl = document.getElementById('result-text');
+        const progressBar = document.getElementById('progress-bar');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Placeholder quiz data
+        const quizData = [
+            {
+                question: '평범한 사물을 보고도 그에 얽힌 특별한 이야기를 상상하곤 하나요?',
+                answers: [
+                    { text: '매우 그렇다. 나의 상상력은 끝이 없다.', score: 10 },
+                    { text: '가끔 그렇다. 특히 영감을 받았을 때 그렇다.', score: 5 },
+                    { text: '아니다. 주로 현실적인 것에 집중한다.', score: 1 }
+                ]
+            },
+            {
+                question: '하루 중 멍하니 공상이나 몽상에 빠져 있는 시간이 많나요?',
+                answers: [
+                    { text: '매우 그렇다. 나만의 내면세계에서 많은 시간을 보낸다.', score: 10 },
+                    { text: '가끔 그렇다. 하지만 현실적인 일도 게을리하지 않는다.', score: 5 },
+                    { text: '아니다. 주로 활동적이고 생산적인 일에 집중한다.', score: 1 }
+                ]
+            },
+            {
+                question: '글, 그림, 음악 등 나만의 방식으로 무언가를 창작하는 것을 즐기나요?',
+                answers: [
+                    { text: '매우 즐긴다. 창작 활동을 통해 나를 표현한다.', score: 10 },
+                    { text: '어느 정도 즐긴다. 하지만 결과물에 대한 부담감도 있다.', score: 5 },
+                    { text: '아니다. 주로 타인의 작품을 감상하는 것을 선호한다.', score: 1 }
+                ]
+            },
+            {
+                question: '현실적인 제약 없이 상상할 수 있다면, 어떤 세계를 만들고 싶은가요?',
+                answers: [
+                    { text: '나의 이상과 가치가 실현되는 아름답고 조화로운 세계.', score: 10 },
+                    { text: '새로운 기술과 혁신으로 가득 찬 발전된 세계.', score: 5 },
+                    { text: '안정적이고 평화로운, 현재와 크게 다르지 않은 세계.', score: 1 }
+                ]
+            },
+            {
+                question: '당신은 어떤 종류의 예술 작품에 가장 큰 감동을 받나요?',
+                answers: [
+                    { text: '깊은 감성과 철학적인 메시지를 담은 작품.', score: 10 },
+                    { text: '정교한 기술과 완벽한 구성을 보여주는 작품.', score: 5 },
+                    { text: '유쾌하고 즐거움을 주는 대중적인 작품.', score: 1 }
+                ]
+            }
+        ];
+
+        startBtn.addEventListener('click', startQuiz);
+        retryBtn.addEventListener('click', startQuiz);
+
+        function setInitialView() {
+            startArea.style.display = 'block';
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'none';
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            resultTitleEl.innerText = '';
+            resultTextEl.innerText = '';
+            
+            startArea.style.display = 'none';
+            quizArea.style.display = 'block';
+            resultArea.style.display = 'none';
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            updateProgressBar();
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionEl.innerText = currentQuestion.question;
+            answersEl.innerHTML = '';
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer.text;
+                button.addEventListener('click', (e) => selectAnswer(answer.score, e.target));
+                answersEl.appendChild(button);
+            });
+        }
+
+        function selectAnswer(answerScore, selectedButton) {
+            score += answerScore;
+            selectedButton.classList.add('selected');
+            
+            const answerButtons = answersEl.querySelectorAll('button');
+            answerButtons.forEach(button => button.disabled = true);
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                updateProgressBar();
+
+                if (currentQuestionIndex < quizData.length) {
+                    quizContainer.style.opacity = 0;
+                    setTimeout(() => {
+                        showQuestion();
+                        quizContainer.style.opacity = 1;
+                    }, 400);
+                } else {
+                    showResult();
+                }
+            }, 500);
+        }
+
+        function showResult() {
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'block';
+            let resultTitle = '';
+            let resultMessage = '';
+            // Generic result based on score
+            if (score >= 15) {
+                resultTitle = '높은 점수';
+                resultMessage = '당신은 이 테스트에서 높은 점수를 받았습니다!';
+            } else if (score >= 10) {
+                resultTitle = '중간 점수';
+                resultMessage = '당신은 이 테스트에서 중간 점수를 받았습니다.';
+            } else {
+                resultTitle = '낮은 점수';
+                resultMessage = '당신은 이 테스트에서 낮은 점수를 받았습니다.';
+            }
+            resultTitleEl.innerText = resultTitle;
+            resultTextEl.innerText = resultMessage;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        setInitialView();
+    </script>
+</body>
+</html>

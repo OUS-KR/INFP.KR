@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INFP 연애 스타일 테스트</title>
+    <link rel="stylesheet" href="/u/tests/assets/css/main.css?20251012150000">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4262871645049971" crossorigin="anonymous"></script>
+</head>
+<body>
+    <header class="main-nav">
+        <a href="/u/tests/" class="logo">INFP.KR Tests</a>
+        <div class="nav-right-section">
+            <nav class="nav-links" id="nav-links">
+                <!-- Dynamic menu will be loaded here by dynamic-menu.js -->
+            </nav>
+            <button id="theme-switcher" class="theme-switcher">🌙</button>
+            <button id="hamburger" class="hamburger">☰</button>
+        </div>
+    </header>
+    <div id="quiz-container" class="container">
+        <div id="start-area">
+            <h1>INFP 연애 스타일 테스트</h1>
+            <p>당신은 어떤 연애 스타일을 가지고 있나요? INFP의 깊은 정서적 교감과 이상적인 사랑, 그리고 헌신적인 모습을 이 테스트를 통해 탐색해 보세요!</p>
+            <button id="start-btn" class="btn btn-primary">테스트 시작하기</button>
+        </div>
+
+        <div id="quiz-area" class="hidden">
+            <div class="progress-bar-container">
+                <div id="progress-bar"></div>
+            </div>
+            <div id="question"></div>
+            <div id="answers"></div>
+        </div>
+
+        <div id="result-area" class="hidden">
+            <div class="result-card">
+                <h2 id="result-title" class="result-title"></h2>
+                <p id="result-text"></p>
+                <button id="retry-btn" class="btn btn-primary">다시하기</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/u/tests/assets/js/main.js?20251012150000" defer></script>
+    <script src="/u/tests/assets/js/dynamic-menu.js" defer></script>
+    <script>
+        const quizContainer = document.getElementById('quiz-container');
+        const startArea = document.getElementById('start-area');
+        const quizArea = document.getElementById('quiz-area');
+        const resultArea = document.getElementById('result-area');
+        const startBtn = document.getElementById('start-btn');
+        const retryBtn = document.getElementById('retry-btn');
+        const questionEl = document.getElementById('question');
+        const answersEl = document.getElementById('answers');
+        const resultTitleEl = document.getElementById('result-title');
+        const resultTextEl = document.getElementById('result-text');
+        const progressBar = document.getElementById('progress-bar');
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        // Placeholder quiz data
+        const quizData = [
+            {
+                question: '연인과 감정적인 갈등이 생겼을 때, 당신의 첫 반응은?',
+                answers: [
+                    { text: '깊은 대화를 통해 오해를 풀고 관계를 회복하려 노력한다.', score: 10 },
+                    { text: '상대방의 감정을 먼저 헤아리고 위로한다.', score: 5 },
+                    { text: '갈등 상황을 피하고 혼자 생각할 시간을 갖는다.', score: 1 }
+                ]
+            },
+            {
+                question: '당신이 생각하는 최고의 애정 표현은 무엇인가요?',
+                answers: [
+                    { text: '상대방의 존재 자체를 온전히 이해하고 지지해주기.', score: 10 },
+                    { text: '따뜻한 말과 스킨십으로 애정을 표현하는 것.', score: 5 },
+                    { text: '상대방에게 필요한 실질적인 도움을 주는 것.', score: 1 }
+                ]
+            },
+            {
+                question: '연인에게 바라는 가장 중요한 한 가지는?',
+                answers: [
+                    { text: '깊은 정신적, 감정적 교감.', score: 10 },
+                    { text: '변함없는 신뢰와 안정감.', score: 5 },
+                    { text: '자유와 독립성을 존중해주는 것.', score: 1 }
+                ]
+            },
+            {
+                question: '연인과 가장 하고 싶은 데이트는?',
+                answers: [
+                    { text: '조용한 곳에서 서로의 내면 깊은 이야기 나누기, 함께 책 읽기.', score: 10 },
+                    { text: '새로운 장소를 탐험하거나 활동적인 경험을 하는 것.', score: 5 },
+                    { text: '친구들과 함께 어울려 즐거운 시간을 보내는 것.', score: 1 }
+                ]
+            },
+            {
+                question: '연인에게 솔직한 피드백을 줄 때 당신의 방식은?',
+                answers: [
+                    { text: '상대방의 감정을 고려하여 조심스럽게, 하지만 진심을 담아 표현한다.', score: 10 },
+                    { text: '핵심을 정확히 전달하되, 감정적인 부분도 함께 고려한다.', score: 5 },
+                    { text: '갈등을 피하기 위해 웬만하면 피드백을 하지 않는다.', score: 1 }
+                ]
+            }
+        ];
+
+        startBtn.addEventListener('click', startQuiz);
+        retryBtn.addEventListener('click', startQuiz);
+
+        function setInitialView() {
+            startArea.style.display = 'block';
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'none';
+        }
+
+        function startQuiz() {
+            currentQuestionIndex = 0;
+            score = 0;
+            
+            resultTitleEl.innerText = '';
+            resultTextEl.innerText = '';
+            
+            startArea.style.display = 'none';
+            quizArea.style.display = 'block';
+            resultArea.style.display = 'none';
+            
+            showQuestion();
+        }
+
+        function showQuestion() {
+            updateProgressBar();
+            const currentQuestion = quizData[currentQuestionIndex];
+            questionEl.innerText = currentQuestion.question;
+            answersEl.innerHTML = '';
+            currentQuestion.answers.forEach(answer => {
+                const button = document.createElement('button');
+                button.innerText = answer.text;
+                button.addEventListener('click', (e) => selectAnswer(answer.score, e.target));
+                answersEl.appendChild(button);
+            });
+        }
+
+        function selectAnswer(answerScore, selectedButton) {
+            score += answerScore;
+            selectedButton.classList.add('selected');
+            
+            const answerButtons = answersEl.querySelectorAll('button');
+            answerButtons.forEach(button => button.disabled = true);
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                updateProgressBar();
+
+                if (currentQuestionIndex < quizData.length) {
+                    quizContainer.style.opacity = 0;
+                    setTimeout(() => {
+                        showQuestion();
+                        quizContainer.style.opacity = 1;
+                    }, 400);
+                } else {
+                    showResult();
+                }
+            }, 500);
+        }
+
+        function showResult() {
+            quizArea.style.display = 'none';
+            resultArea.style.display = 'block';
+            let resultTitle = '';
+            let resultMessage = '';
+            // Generic result based on score
+            if (score >= 15) {
+                resultTitle = '높은 점수';
+                resultMessage = '당신은 이 테스트에서 높은 점수를 받았습니다!';
+            } else if (score >= 10) {
+                resultTitle = '중간 점수';
+                resultMessage = '당신은 이 테스트에서 중간 점수를 받았습니다.';
+            } else {
+                resultTitle = '낮은 점수';
+                resultMessage = '당신은 이 테스트에서 낮은 점수를 받았습니다.';
+            }
+            resultTitleEl.innerText = resultTitle;
+            resultTextEl.innerText = resultMessage;
+        }
+
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / quizData.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        setInitialView();
+    </script>
+</body>
+</html>
