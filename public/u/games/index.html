@@ -285,7 +285,7 @@
                     <p class="desc" id="desc-text">꿈속 구름 위로 올라가세요.<br>터치로 이동</p>
                     <button class="game-btn" onclick="startGame()">START</button>
                     <div class="game-tip" id="game-tip-text">💡 Tip: 방향키/터치로 이동</div>
-                    <div class="adsense-slot">Google AdSense (300x250)</div>
+                    <div class="adsense-slot">300x250</div>
                 </div>
 
                 <div id="game-over-screen" class="screen-overlay hidden">
@@ -293,7 +293,7 @@
                     <p class="desc" id="final-score">SCORE: 0</p>
                     <button class="game-btn" onclick="startGame()">RETRY</button>
                     <button class="game-btn" onclick="shareScore()" style="background: #5A5480;">SHARE</button>
-                    <div class="adsense-slot">Google AdSense (300x250)</div>
+                    <div class="adsense-slot">300x250</div>
                 </div>
             </div>
         </div>
@@ -731,12 +731,41 @@
             grad.addColorStop(0, '#2C3E50'); grad.addColorStop(1, '#4CA1AF');
             ctx.fillStyle = grad; ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
             ctx.fillStyle = '#2e8b57'; ctx.fillRect(0, LOGICAL_HEIGHT-80, LOGICAL_WIDTH, 80);
-            ctx.fillStyle = '#1a5235';
-            for(let i=0; i<5; i++) {
-                let x = ((i * 150) - (this.bgOffset * 0.5)) % (LOGICAL_WIDTH + 150);
+            
+            // [디자인 수정] 배경 나무 (침엽수 스타일)
+            for(let i=0; i<6; i++) { 
+                let x = ((i * 120) - (this.bgOffset * 0.5)) % (LOGICAL_WIDTH + 150);
                 if (x < -50) x += LOGICAL_WIDTH + 150;
-                ctx.fillRect(x, LOGICAL_HEIGHT-150, 40, 100); ctx.beginPath(); ctx.arc(x+20, LOGICAL_HEIGHT-160, 40, 0, Math.PI*2); ctx.fill();
+                
+                // 기둥
+                ctx.fillStyle = '#3E2723'; 
+                ctx.fillRect(x+15, LOGICAL_HEIGHT-150, 10, 100); 
+                
+                // 잎 (3단 삼각형)
+                ctx.fillStyle = '#1a5235'; // 짙은 녹색
+                
+                // 하단 잎
+                ctx.beginPath();
+                ctx.moveTo(x-10, LOGICAL_HEIGHT-120);
+                ctx.lineTo(x+50, LOGICAL_HEIGHT-120);
+                ctx.lineTo(x+20, LOGICAL_HEIGHT-180);
+                ctx.fill();
+                
+                // 중간 잎
+                ctx.beginPath();
+                ctx.moveTo(x-5, LOGICAL_HEIGHT-160);
+                ctx.lineTo(x+45, LOGICAL_HEIGHT-160);
+                ctx.lineTo(x+20, LOGICAL_HEIGHT-210);
+                ctx.fill();
+                
+                // 상단 잎
+                ctx.beginPath();
+                ctx.moveTo(x, LOGICAL_HEIGHT-190);
+                ctx.lineTo(x+40, LOGICAL_HEIGHT-190);
+                ctx.lineTo(x+20, LOGICAL_HEIGHT-230);
+                ctx.fill();
             }
+            
             ctx.strokeStyle = 'rgba(200, 220, 255, 0.4)'; ctx.lineWidth = 1; ctx.beginPath();
             this.rain.forEach(r => { ctx.moveTo(r.x, r.y); ctx.lineTo(r.x-2, r.y+r.len); }); ctx.stroke();
             this.obstacles.forEach(ob => {
