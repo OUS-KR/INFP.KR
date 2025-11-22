@@ -16,7 +16,7 @@
         body {
             margin: 0;
             padding: 0;
-            background-color: #111; /* 레터박스 색상 */
+            background-color: #111;
             color: #e0e0e0;
             font-family: 'Noto Sans KR', sans-serif;
             overflow-x: hidden;
@@ -95,12 +95,12 @@
             color: #ccc;
         }
 
-        /* --- 2. 게임 영역 --- */
+        /* --- 2. 게임 영역 (최상위 컨테이너) --- */
         #game-wrapper {
             position: relative;
             width: 100%;
-            max-width: 450px; /* 기본 상태 최대 너비 */
-            height: 75vh;     /* 기본 상태 높이 */
+            max-width: 450px; /* 일반 모드 최대 너비 */
+            height: 75vh;     /* 일반 모드 높이 */
             max-height: 800px;
             min-height: 500px;
             margin: 20px auto;
@@ -108,48 +108,48 @@
             border-radius: 12px;
             overflow: hidden;
             border: 4px solid #3d2430;
-            background-color: #000; /* 빈 공간 검은색 */
+            background-color: #000; /* 빈 공간 색상 */
+            
+            /* Flexbox로 내부 game-stage 중앙 정렬 */
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
 
-        /* 전체 화면 시 스타일 (wrapper가 전체를 차지) */
+        /* 전체 화면 모드 스타일 */
         #game-wrapper:fullscreen {
             width: 100vw;
-            max-width: none;
             height: 100vh;
+            max-width: none;
             max-height: none;
             margin: 0;
             border: none;
             border-radius: 0;
-            background-color: #111; /* 레터박스 배경 */
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            background-color: #000;
         }
 
-        #game-container {
-            width: 100%;
-            height: 100%;
+        /* --- 실제 게임 스테이지 (캔버스 + UI 통합) --- */
+        #game-stage {
             position: relative;
+            /* width/height는 JS resize()에서 설정됨 */
             background-color: #221019;
-            display: flex;
-            justify-content: center;
-            align-items: center;
+            box-shadow: 0 0 20px rgba(0,0,0,0.5);
             overflow: hidden;
         }
 
         canvas {
             display: block;
-            /* 캔버스 크기는 JS에서 scale로 제어됨 */
-            box-shadow: 0 0 20px rgba(0,0,0,0.5); /* 캔버스 경계 강조 */
+            width: 100%;
+            height: 100%;
+            touch-action: none;
         }
 
-        /* 게임 UI 레이어 (캔버스 위에 덮어씌움) */
+        /* 게임 UI 레이어 */
         #ui-layer { 
             position: absolute; 
             top: 0; left: 0; 
             width: 100%; height: 100%; 
             pointer-events: none; 
-            /* JS에서 캔버스와 동일한 크기/위치로 조정됨 */
         }
         
         #score-board { 
@@ -234,7 +234,8 @@
     </header>
 
     <div id="game-wrapper">
-        <div id="game-container">
+        <!-- 통합 컨테이너 (게임 화면 + UI) -->
+        <div id="game-stage">
             <canvas id="gameCanvas"></canvas>
             
             <div id="ui-layer">
@@ -244,7 +245,6 @@
                     <button class="control-btn" onclick="toggleFullScreen()" title="전체 화면">⛶</button>
                 </div>
                 
-                <!-- 오버레이들도 ui-layer 안에 배치하여 스케일링 적용 -->
                 <div id="start-screen" class="screen-overlay">
                     <h2 id="title-text">Daydream<br>Jump</h2>
                     <p class="desc" id="desc-text">꿈속 구름 위로 올라가세요.<br>터치로 이동</p>
@@ -293,14 +293,13 @@
     const canvas = document.getElementById('gameCanvas');
     const ctx = canvas.getContext('2d');
     const gameWrapper = document.getElementById('game-wrapper');
-    const gameContainer = document.getElementById('game-container');
+    const gameStage = document.getElementById('game-stage'); // 통합 컨테이너
     const scoreEl = document.getElementById('score-board');
-    const uiLayer = document.getElementById('ui-layer');
     
-    // 1. 고정된 논리적 해상도 설정 (9:16 비율)
+    // 논리적 해상도 고정 (9:16 비율)
     const LOGICAL_WIDTH = 360;
     const LOGICAL_HEIGHT = 640;
-    let scaleRatio = 1; // 화면 비율에 따른 스케일 값
+    let scaleRatio = 1; 
 
     // 화면 요소
     const startScreen = document.getElementById('start-screen');
@@ -320,32 +319,34 @@
     let isPlaying = false;
     let gameLoopId;
 
-    // --- [중요] 리사이즈 & 스케일링 로직 ---
+    // --- [핵심] 리사이즈 로직 개선 ---
     function resize() {
-        const containerW = gameContainer.clientWidth;
-        const containerH = gameContainer.clientHeight;
+        // game-wrapper(부모)의 크기를 기준으로 계산
+        const containerW = gameWrapper.clientWidth;
+        const containerH = gameWrapper.clientHeight;
 
-        // 컨테이너에 맞게 비율(Scale) 계산 (Contain 방식)
+        // 비율(Scale) 계산 (Contain 방식)
         const scaleX = containerW / LOGICAL_WIDTH;
         const scaleY = containerH / LOGICAL_HEIGHT;
         scaleRatio = Math.min(scaleX, scaleY);
 
-        // 캔버스 표시 크기(CSS) 설정
-        canvas.style.width = `${LOGICAL_WIDTH * scaleRatio}px`;
-        canvas.style.height = `${LOGICAL_HEIGHT * scaleRatio}px`;
+        // game-stage(자식)의 크기를 조절 -> 내부 요소들은 100%로 따라옴
+        const targetW = Math.floor(LOGICAL_WIDTH * scaleRatio);
+        const targetH = Math.floor(LOGICAL_HEIGHT * scaleRatio);
+
+        gameStage.style.width = `${targetW}px`;
+        gameStage.style.height = `${targetH}px`;
         
-        // UI 레이어도 캔버스와 동일하게 맞춤 (좌표 일치)
-        uiLayer.style.width = `${LOGICAL_WIDTH * scaleRatio}px`;
-        uiLayer.style.height = `${LOGICAL_HEIGHT * scaleRatio}px`;
-        
-        // 캔버스 내부 해상도는 논리 해상도로 고정 (좌표계 유지)
+        // 캔버스 내부 해상도 고정
         canvas.width = LOGICAL_WIDTH;
         canvas.height = LOGICAL_HEIGHT;
         
-        ctx.imageSmoothingEnabled = true; // 벡터 그래픽 부드럽게
+        ctx.imageSmoothingEnabled = true;
     }
+    
     window.addEventListener('resize', resize);
-    setTimeout(resize, 100); // 초기 실행
+    // 초기 실행 딜레이 (CSS 로드 대기)
+    setTimeout(resize, 100);
 
     function toggleFullScreen() {
         if (!document.fullscreenElement) {
@@ -354,6 +355,7 @@
             document.exitFullscreen();
         }
     }
+    // 전체 화면 변경 시 리사이즈 트리거
     document.addEventListener('fullscreenchange', () => setTimeout(resize, 100));
 
     function openMusicLink() {
@@ -422,15 +424,15 @@
     window.addEventListener('keydown', e => { if(['ArrowLeft','ArrowRight','ArrowUp','Space'].includes(e.code)) { keys[e.code]=true; if(e.code==='Space') e.preventDefault(); } });
     window.addEventListener('keyup', e => { if(['ArrowLeft','ArrowRight','ArrowUp','Space'].includes(e.code)) keys[e.code]=false; });
 
-    canvas.addEventListener('touchstart', e => {
-        // 터치 좌표를 논리 좌표로 변환하지 않아도, 탭 점프는 전역 터치로 처리
+    // [중요] 터치 이벤트 리스너를 gameStage(또는 wrapper)에 붙여서 좌표 계산 정확도 향상
+    gameWrapper.addEventListener('touchstart', e => {
         if (currentGameMode === 'stroll' && isPlaying) strollGame.tapJump();
         e.preventDefault();
     }, {passive: false});
 
-    canvas.addEventListener('touchmove', e => {
-        // 터치 좌표 보정: (화면좌표 - 캔버스시작점) / 스케일비율
-        const rect = canvas.getBoundingClientRect();
+    gameWrapper.addEventListener('touchmove', e => {
+        // 터치 좌표 보정: (화면좌표 - 스테이지시작점) / 스케일비율
+        const rect = gameStage.getBoundingClientRect();
         const touchX = (e.touches[0].clientX - rect.left) / scaleRatio;
         
         if (currentGameMode !== 'stroll') {
@@ -440,9 +442,9 @@
         e.preventDefault();
     }, {passive: false});
 
-    canvas.addEventListener('touchend', e => { keys.ArrowLeft = false; keys.ArrowRight = false; });
+    gameWrapper.addEventListener('touchend', e => { keys.ArrowLeft = false; keys.ArrowRight = false; });
 
-    // --- 캐릭터 그리기 ---
+    // --- 캐릭터 그리기 (통일됨) ---
     function drawCharacter(ctx, x, y) {
         ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI*2); ctx.fill(); 
         ctx.fillStyle = '#5A5480'; ctx.beginPath(); ctx.arc(x-8, y-2, 3, 0, Math.PI*2); ctx.arc(x+8, y-2, 3, 0, Math.PI*2); ctx.fill(); 
