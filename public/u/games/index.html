@@ -168,6 +168,22 @@
             border-radius: 8px; border: 1px dashed #ccc;
         }
 
+        /* --- 유튜브 플레이어: 우측 하단 작게 배치 (디버깅용) --- */
+        #youtube-player-container {
+            position: fixed; 
+            bottom: 10px;    
+            right: 10px;
+            width: 120px;    /* 조금 더 작게 */
+            height: 90px;
+            opacity: 0.8;      
+            z-index: 9999;   
+            pointer-events: none; /* 클릭 통과 */
+            border: 2px solid #ee2b8c; 
+            background: black;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
         /* --- 3. 정보 콘텐츠 섹션 --- */
         .content-container {
             width: 100%;
@@ -207,7 +223,6 @@
             <!-- UI 레이어 -->
             <div id="ui-layer">
                 <div id="score-board">Score: 0</div>
-                <!-- BGM 토글 버튼 제거됨 -->
             </div>
 
             <!-- 시작 화면 -->
@@ -230,8 +245,10 @@
         </div>
     </div>
 
-    <!-- 오디오 태그 (소스는 JS에서 동적으로 설정) -->
-    <audio id="bg-music" loop></audio>
+    <!-- 유튜브 플레이어 컨테이너 -->
+    <div id="youtube-player-container">
+        <div id="youtube-player"></div>
+    </div>
 
     <!-- 3. 텍스트 콘텐츠 -->
     <div class="content-container">
@@ -302,33 +319,7 @@
     window.addEventListener('resize', resize);
     resize(); 
 
-    // --- 사운드 매니저 (Web Audio API + BGM) ---
-    const bgMusic = document.getElementById('bg-music');
-    
-    // BGM 파일 경로 설정
-    const bgmSources = {
-        jump: './bgms/daydream-jump.mp3',
-        catch: './bgms/starry-night-catch.mp3'
-    };
-
-    // BGM 에러 핸들링 (파일 없어도 조용히 넘어가기)
-    bgMusic.addEventListener('error', function(e) {
-        console.log("BGM 파일을 찾을 수 없습니다. 배경음 없이 진행합니다.");
-    });
-
-    function playBgm() {
-        // 소스 업데이트가 필요하면 변경
-        const targetSrc = bgmSources[currentGameMode];
-        // 현재 src가 비어있거나 다르면 교체 (파일명 인코딩 고려)
-        if (!bgMusic.src || decodeURIComponent(bgMusic.src).indexOf(targetSrc) === -1) {
-            bgMusic.src = targetSrc;
-        }
-        
-        bgMusic.play().catch(e => {
-            console.log("BGM 재생 실패 (파일 없음 또는 사용자 상호작용 필요)");
-        });
-    }
-
+    // --- 사운드 매니저 (효과음: Web Audio API) ---
     const SoundManager = {
         ctx: null,
         init: function() {
@@ -416,6 +407,90 @@
             osc.stop(this.ctx.currentTime + 0.5);
         }
     };
+
+    // --- YouTube BGM Manager (안전한 NCS 음악으로 교체) ---
+    const youtubeVideoIds = {
+        // Kevin MacLeod - Fluffing a Duck (Safe, Embeddable)
+        jump: 'Sbdutn8Q1T0', 
+        // Kevin MacLeod - Monkeys Spinning Monkeys (Safe, Embeddable)
+        catch: 'uXnInhM68Og' 
+    };
+
+    let player;
+    let isPlayerReady = false;
+
+    // YouTube API 로드
+    var tag = document.createElement('script');
+    tag.src = "https://www.youtube.com/iframe_api";
+    var firstScriptTag = document.getElementsByTagName('script')[0];
+    firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('youtube-player', {
+            height: '200', // 충분한 크기 확보
+            width: '200',
+            videoId: youtubeVideoIds[currentGameMode],
+            playerVars: {
+                'autoplay': 0,
+                'controls': 1, 
+                'showinfo': 0,
+                'rel': 0,
+                'loop': 1, 
+                'playlist': youtubeVideoIds[currentGameMode],
+                // 'origin': ... // 오류 방지를 위해 origin 파라미터 제거
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }
+
+    function onPlayerReady(event) {
+        console.log("YouTube Player Ready");
+        isPlayerReady = true;
+        event.target.setVolume(30); 
+    }
+
+    function onPlayerStateChange(event) {
+        if (event.data === YT.PlayerState.ENDED) {
+            player.playVideo();
+        }
+    }
+    
+    function onPlayerError(event) {
+        console.error("YouTube Player Error:", event.data);
+        // 에러 발생 시 로그 출력 (153 등)
+    }
+
+    function playBgm() {
+        if (isPlayerReady && player && player.loadVideoById) {
+            const targetId = youtubeVideoIds[currentGameMode];
+            
+            try {
+                // 현재 로드된 비디오 ID가 다르거나 없으면 로드
+                if (player.getVideoData && player.getVideoData().video_id !== targetId) {
+                     player.loadVideoById({
+                        videoId: targetId,
+                        startSeconds: 0,
+                        suggestedQuality: 'small'
+                    });
+                } else {
+                    player.playVideo();
+                }
+            } catch(e) {
+                console.error("Youtube Play Error:", e);
+            }
+        }
+    }
+
+    function stopBgm() {
+        if (isPlayerReady && player && player.pauseVideo) {
+            player.pauseVideo();
+        }
+    }
+
 
     // --- 입력 처리 (공통) ---
     const keys = {};
@@ -764,18 +839,12 @@
             catchGame.draw();
         }
         
-        // 게임 모드 변경 시 배경음악도 변경 및 재생 시도
-        // 잠시 멈추고 소스 변경 후 재생
-        bgMusic.pause();
-        bgMusic.currentTime = 0;
-        playBgm();
+        stopBgm(); // 게임 변경 시 음악 중지
     }
 
     function startGame() {
-        SoundManager.init();
-        
-        // BGM 재생 시도
-        playBgm();
+        SoundManager.init(); // 효과음 준비
+        playBgm(); // 배경음악 재생 시도
 
         startScreen.classList.add('hidden');
         gameOverScreen.classList.add('hidden');
@@ -795,9 +864,7 @@
 
     function gameOver() {
         SoundManager.playGameOver();
-        
-        // 게임 오버 시 BGM 멈출지 여부 (선택사항, 여기선 계속 재생하거나 멈춤)
-        // bgMusic.pause(); // 원하시면 주석 해제
+        stopBgm(); // 게임 종료 시 음악 중지
         
         isPlaying = false;
         gameOverScreen.classList.remove('hidden');
