@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="INFP(열정적인 중재자)를 위한 힐링 게임 컬렉션. 몽환적인 점프 게임과 별 잡기 게임을 즐기며 스트레스를 해소하세요. INFP 성격 분석 포함.">
+    <meta name="keywords" content="INFP, 인프피, MBTI 게임, 미니게임, 힐링게임, 별잡기, 점프게임, 무료 웹게임">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta property="og:title" content="INFP Mini Games - 몽상가들의 놀이터">
+    <meta property="og:description" content="INFP를 위한 두 가지 힐링 게임: Daydream Jump & Starry Night Catch">
+    <title>INFP Mini Games - 몽상가들의 놀이터</title>
+    <style>
+        /* --- 기본 스타일 --- */
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #221019;
+            color: #e0e0e0;
+            font-family: 'Noto Sans KR', sans-serif;
+            overflow-x: hidden;
+            line-height: 1.7;
+        }
+
+        /* 레이아웃 */
+        .page-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+            min-height: 100vh;
+        }
+
+        /* --- 1. 상단 헤더 & 메뉴 --- */
+        header {
+            width: 100%;
+            background: #2a1520;
+            border-bottom: 1px solid #3d2430;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+
+        .header-content {
+            max-width: 700px;
+            margin: 0 auto;
+            padding: 10px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 20px;
+            margin: 0 0 10px 0;
+            color: #FFD1DC;
+            letter-spacing: -0.5px;
+        }
+
+        /* 메뉴 탭 스타일 */
+        .game-nav {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+            max-width: 450px;
+            justify-content: center;
+        }
+
+        .nav-btn {
+            flex: 1;
+            padding: 8px 10px;
+            border: none;
+            background: #3d2430;
+            color: #999;
+            font-family: 'Noto Sans KR', sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .nav-btn.active {
+            background: #ee2b8c;
+            color: white;
+            box-shadow: 0 2px 10px rgba(238, 43, 140, 0.4);
+        }
+        
+        .nav-btn:hover:not(.active) {
+            background: #4d3040;
+            color: #ccc;
+        }
+
+        /* --- 2. 게임 영역 --- */
+        #game-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 450px;
+            height: 75vh;
+            max-height: 800px;
+            min-height: 500px;
+            margin: 20px auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 12px;
+            overflow: hidden;
+            border: 4px solid #3d2430;
+        }
+
+        #game-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            background-color: #221019;
+        }
+
+        canvas {
+            display: block;
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+
+        /* 게임 UI */
+        #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        #score-board { 
+            position: absolute; top: 20px; left: 20px; 
+            font-size: 20px; font-weight: bold; color: #fff; 
+            background: rgba(0, 0, 0, 0.4); padding: 5px 15px; 
+            border-radius: 20px; backdrop-filter: blur(2px); 
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        /* 오버레이 (시작/종료) */
+        .screen-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(34, 16, 25, 0.9);
+            display: flex; flex-direction: column; 
+            justify-content: center; align-items: center;
+            z-index: 10; pointer-events: auto;
+            backdrop-filter: blur(4px);
+            transition: opacity 0.3s;
+        }
+        .hidden { display: none !important; }
+
+        .screen-overlay h2 { color: #fff; font-size: 32px; margin-bottom: 10px; text-align: center; text-shadow: 0 4px 10px rgba(238, 43, 140, 0.5); }
+        .desc { color: #ddd; margin-bottom: 30px; font-size: 15px; text-align: center; line-height: 1.5; white-space: pre-line;}
+        
+        button.game-btn {
+            background: linear-gradient(45deg, #ee2b8c, #ff6b6b);
+            color: white; border: none; padding: 15px 40px;
+            font-size: 18px; border-radius: 50px; cursor: pointer;
+            font-weight: bold; box-shadow: 0 5px 20px rgba(238, 43, 140, 0.4);
+            transition: transform 0.1s; margin-bottom: 15px; min-width: 200px;
+        }
+        button.game-btn:active { transform: scale(0.96); }
+        
+        .game-tip {
+            background: #331e28; padding: 15px; border-radius: 8px; 
+            margin-top: 10px; font-size: 0.9rem; color: #ccc;
+        }
+
+        .adsense-slot {
+            width: 300px; height: 250px; background-color: #f0f0f0;
+            display: flex; justify-content: center; align-items: center;
+            color: #999; font-size: 14px; margin-top: 20px;
+            border-radius: 8px; border: 1px dashed #ccc;
+        }
+
+        /* --- 3. 정보 콘텐츠 섹션 --- */
+        .content-container {
+            width: 100%;
+            background-color: #1a0c13;
+            display: flex;
+            justify-content: center;
+            padding: 50px 20px;
+            flex: 1; 
+        }
+        .content-section { width: 100%; max-width: 700px; color: #ccc; display: none; }
+        .content-section.active-content { display: block; }
+        
+        .content-section h3 { color: #ee2b8c; border-bottom: 2px solid #444; padding-bottom: 10px; margin-top: 40px; }
+        .highlight-box { background: #2d1b24; padding: 20px; border-radius: 10px; border-left: 4px solid #ee2b8c; margin: 20px 0; }
+        
+    </style>
+</head>
+<body>
+
+<div class="page-wrapper">
+    <!-- 1. 상단 헤더 & 메뉴 -->
+    <header>
+        <div class="header-content">
+            <h1>☁️ INFP Mini Games</h1>
+            <nav class="game-nav">
+                <button class="nav-btn active" onclick="switchGame('jump')">Daydream Jump</button>
+                <button class="nav-btn" onclick="switchGame('catch')">Starry Catch</button>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 2. 게임 영역 -->
+    <div id="game-wrapper">
+        <div id="game-container">
+            <canvas id="gameCanvas"></canvas>
+            
+            <!-- UI 레이어 -->
+            <div id="ui-layer">
+                <div id="score-board">Score: 0</div>
+                <!-- BGM 토글 버튼 제거됨 -->
+            </div>
+
+            <!-- 시작 화면 -->
+            <div id="start-screen" class="screen-overlay">
+                <h2 id="title-text">Daydream<br>Jump</h2>
+                <p class="desc" id="desc-text">꿈속 구름 위로 올라가세요.<br>터치로 이동</p>
+                <button class="game-btn" onclick="startGame()">게임 시작</button>
+                <div class="game-tip">💡 Tip: PC는 방향키, 모바일은 터치!</div>
+                <div class="adsense-slot">Google AdSense (300x250)</div>
+            </div>
+
+            <!-- 게임 오버 화면 -->
+            <div id="game-over-screen" class="screen-overlay hidden">
+                <h2 id="game-over-title">Game Over</h2>
+                <p class="desc" id="final-score">점수: 0</p>
+                <button class="game-btn" onclick="startGame()">다시 하기</button>
+                <button class="game-btn" onclick="shareScore()" style="background: #5A5480;">점수 공유하기</button>
+                <div class="adsense-slot">Google AdSense (300x250)</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 오디오 태그 (소스는 JS에서 동적으로 설정) -->
+    <audio id="bg-music" loop></audio>
+
+    <!-- 3. 텍스트 콘텐츠 -->
+    <div class="content-container">
+        <!-- Daydream Jump SEO 텍스트 -->
+        <article class="content-section active-content" id="content-jump">
+            <h3>INFP '열정적인 중재자' 완벽 분석</h3>
+            <p>
+                전 세계 인구의 약 4%를 차지하는 <strong>INFP(인프피)</strong>는 MBTI 유형 중 가장 이상적이고 감수성이 풍부한 유형으로 꼽힙니다. 
+                <strong>Daydream Jump</strong>는 끊임없이 이상적인 세계를 꿈꾸는 INFP의 특성을 담았습니다.
+            </p>
+            <div class="highlight-box">
+                <strong>✨ INFP 팩폭:</strong> 잡생각이 너무 많아서 밤에 잠을 못 이루지 않나요? 
+                이 게임은 멍하니 플레이하기 딱 좋습니다. 귀여운 <strong>'동그란 요정'</strong>과 함께 머릿속을 비우고 구름을 밟아보세요.
+            </div>
+        </article>
+
+        <!-- Starry Night Catch SEO 텍스트 -->
+        <article class="content-section" id="content-catch">
+            <h3>INFP와 'Starry Night Catch'</h3>
+            <p>
+                INFP의 내면은 밤하늘처럼 깊고 아름답습니다. 
+                떨어지는 <strong>'노란 별'</strong>은 희망과 영감을, <strong>'먹구름'</strong>은 우울과 불안을 의미합니다.
+                소중한 영감은 놓치지 말고 잡되, 부정적인 감정은 슬쩍 피해보세요.
+            </p>
+            <div class="highlight-box">
+                <strong>💡 게임 팁:</strong> 별을 연속으로 잡으면 기분이 좋아지지만, 
+                먹구름(스트레스)에 닿으면 게임이 끝납니다. INFP는 유리멘탈이라 조심해야 해요!
+            </div>
+        </article>
+    </div>
+</div>
+
+<script>
+    // --- 전역 변수 및 설정 ---
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+    const gameContainer = document.getElementById('game-container');
+    const scoreEl = document.getElementById('score-board');
+    
+    // 화면 요소
+    const startScreen = document.getElementById('start-screen');
+    const gameOverScreen = document.getElementById('game-over-screen');
+    const titleText = document.getElementById('title-text');
+    const descText = document.getElementById('desc-text');
+    const gameOverTitle = document.getElementById('game-over-title');
+    const finalScoreEl = document.getElementById('final-score');
+    
+    // 콘텐츠 섹션
+    const contentJump = document.getElementById('content-jump');
+    const contentCatch = document.getElementById('content-catch');
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    // 게임 상태
+    let currentGameMode = 'jump';
+    let isPlaying = false;
+    let gameLoopId;
+    
+    let gameWidth = 320;
+    let gameHeight = 480;
+
+    function resize() {
+        if (!gameContainer) return;
+        gameWidth = gameContainer.clientWidth || 320;
+        gameHeight = gameContainer.clientHeight || 480;
+        canvas.width = gameWidth;
+        canvas.height = gameHeight;
+    }
+    window.addEventListener('resize', resize);
+    resize(); 
+
+    // --- 사운드 매니저 (Web Audio API + BGM) ---
+    const bgMusic = document.getElementById('bg-music');
+    
+    // BGM 파일 경로 설정 (테스트용: 사용자가 제공한 wav 파일 사용)
+    const bgmSources = {
+        jump: 'INFP Sia - 01 Palette of Dreams (꿈의 팔레트).wav',
+        catch: 'INFP Sia - 01 Palette of Dreams (꿈의 팔레트).wav'
+    };
+
+    // BGM 에러 핸들링 (파일 없어도 조용히 넘어가기)
+    bgMusic.addEventListener('error', function(e) {
+        console.log("BGM 파일을 찾을 수 없습니다. 배경음 없이 진행합니다.");
+    });
+
+    function playBgm() {
+        // 소스 업데이트가 필요하면 변경
+        const targetSrc = bgmSources[currentGameMode];
+        // 현재 src가 비어있거나 다르면 교체 (파일명 인코딩 고려)
+        if (!bgMusic.src || decodeURIComponent(bgMusic.src).indexOf(targetSrc) === -1) {
+            bgMusic.src = targetSrc;
+        }
+        
+        bgMusic.play().catch(e => {
+            console.log("BGM 재생 실패 (파일 없음 또는 사용자 상호작용 필요)");
+        });
+    }
+
+    const SoundManager = {
+        ctx: null,
+        init: function() {
+            if (!this.ctx) {
+                this.ctx = new (window.AudioContext || window.webkitAudioContext)();
+            }
+            if (this.ctx.state === 'suspended') {
+                this.ctx.resume();
+            }
+        },
+        playTone: function(freq, type, duration, vol = 0.1) {
+            if (!this.ctx) return;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = type;
+            osc.frequency.setValueAtTime(freq, this.ctx.currentTime);
+            gain.gain.setValueAtTime(vol, this.ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.01, this.ctx.currentTime + duration);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + duration);
+        },
+        playJump: function() {
+            if (!this.ctx) return;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+            osc.frequency.linearRampToValueAtTime(600, this.ctx.currentTime + 0.1);
+            gain.gain.setValueAtTime(0.1, this.ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.1);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.1);
+        },
+        playSuperJump: function() {
+            if (!this.ctx) return;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'sine';
+            osc.frequency.setValueAtTime(400, this.ctx.currentTime);
+            osc.frequency.linearRampToValueAtTime(1200, this.ctx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.15, this.ctx.currentTime); 
+            gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.2);
+        },
+        playSpawnStar: function() {
+            this.playTone(1200, 'sine', 0.05, 0.03);
+        },
+        playSpawnCloud: function() {
+            if (!this.ctx) return;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(150, this.ctx.currentTime);
+            osc.frequency.linearRampToValueAtTime(100, this.ctx.currentTime + 0.2);
+            gain.gain.setValueAtTime(0.05, this.ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.2);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.2);
+        },
+        playCollect: function() {
+            this.playTone(880, 'sine', 0.1, 0.1);
+            setTimeout(() => this.playTone(1100, 'sine', 0.2, 0.1), 50);
+        },
+        playGameOver: function() {
+            if (!this.ctx) return;
+            const osc = this.ctx.createOscillator();
+            const gain = this.ctx.createGain();
+            osc.type = 'triangle';
+            osc.frequency.setValueAtTime(300, this.ctx.currentTime);
+            osc.frequency.linearRampToValueAtTime(50, this.ctx.currentTime + 0.5);
+            gain.gain.setValueAtTime(0.2, this.ctx.currentTime);
+            gain.gain.linearRampToValueAtTime(0, this.ctx.currentTime + 0.5);
+            osc.connect(gain);
+            gain.connect(this.ctx.destination);
+            osc.start();
+            osc.stop(this.ctx.currentTime + 0.5);
+        }
+    };
+
+    // --- 입력 처리 (공통) ---
+    const keys = {};
+    window.addEventListener('keydown', e => {
+        if(['ArrowLeft','ArrowRight'].includes(e.code)) keys[e.code] = true;
+    });
+    window.addEventListener('keyup', e => {
+        if(['ArrowLeft','ArrowRight'].includes(e.code)) keys[e.code] = false;
+    });
+
+    let touchStartX = 0;
+    canvas.addEventListener('touchstart', e => {
+        touchStartX = e.touches[0].clientX;
+        e.preventDefault();
+    }, {passive: false});
+
+    canvas.addEventListener('touchmove', e => {
+        const touchX = e.touches[0].clientX;
+        if (touchX < gameWidth / 2) {
+            keys.ArrowLeft = true; keys.ArrowRight = false;
+        } else {
+            keys.ArrowRight = true; keys.ArrowLeft = false;
+        }
+        e.preventDefault();
+    }, {passive: false});
+
+    canvas.addEventListener('touchend', e => {
+        keys.ArrowLeft = false; keys.ArrowRight = false;
+    });
+
+
+    // ==========================================
+    // [게임 1] Daydream Jump 로직
+    // ==========================================
+    const jumpGame = {
+        player: { x: 0, y: 0, w: 40, h: 40, vx: 0, vy: 0, jumpStrength: -14.0 },
+        platforms: [],
+        particles: [],
+        cameraY: 0,
+        score: 0,
+        bgGradient: ['#D4C4E3', '#F3D4D4'],
+
+        init: function() {
+            this.player.x = gameWidth / 2;
+            this.player.y = gameHeight - 150;
+            this.player.vx = 0; 
+            this.player.vy = 0;
+            this.cameraY = 0;
+            this.score = 0;
+            this.platforms = [];
+            this.particles = [];
+            
+            this.platforms.push({x: gameWidth/2, y: gameHeight - 100, w: 100, h: 20, type: 'normal', vx: 0});
+            for(let i=0; i<10; i++) {
+                this.addPlatform(gameHeight - 200 - i * 90);
+            }
+            this.createStars();
+        },
+
+        createStars: function() {
+            for(let i=0; i<50; i++) {
+                this.particles.push({
+                    x: Math.random() * gameWidth,
+                    y: Math.random() * gameHeight,
+                    size: Math.random() * 3,
+                    alpha: Math.random()
+                });
+            }
+        },
+
+        addPlatform: function(y) {
+            let x = Math.random() * (gameWidth - 80) + 40;
+            let type = Math.random() < 0.15 ? 'jump' : 'normal';
+            
+            let vx = 0;
+            if (this.score > 500) { 
+                if (Math.random() < Math.min(0.5, (this.score - 500) / 5000)) { 
+                    vx = Math.random() < 0.5 ? 2 : -2; 
+                }
+            }
+
+            this.platforms.push({x, y, w: 100, h: 20, type, vx});
+        },
+
+        update: function() {
+            if(keys.ArrowLeft) this.player.vx = -6;
+            else if(keys.ArrowRight) this.player.vx = 6;
+            else this.player.vx *= 0.8;
+
+            this.player.x += this.player.vx;
+            this.player.y += this.player.vy;
+            this.player.vy += 0.6; 
+
+            if(this.player.x < -20) this.player.x = gameWidth + 20;
+            if(this.player.x > gameWidth + 20) this.player.x = -20;
+
+            if(this.player.y > gameHeight + this.cameraY) return gameOver();
+
+            if(this.player.y < gameHeight / 2 + this.cameraY) {
+                let diff = (gameHeight / 2 + this.cameraY) - this.player.y;
+                this.cameraY -= diff;
+                this.score += diff / 10;
+                scoreEl.innerText = `높이: ${Math.floor(this.score)}m`;
+            }
+
+            const lastP = this.platforms[this.platforms.length-1];
+            if(lastP.y - this.cameraY > 100) {
+                let maxGap = Math.min(110, 90 + this.score / 1000); 
+                let minGap = Math.min(60, 40 + this.score / 2000);
+                let gap = Math.random() * (maxGap - minGap) + minGap;
+                
+                this.addPlatform(lastP.y - gap);
+            }
+            if(this.platforms[0].y - this.cameraY > gameHeight) this.platforms.shift();
+
+            this.platforms.forEach(p => {
+                if (p.vx !== 0) {
+                    p.x += p.vx;
+                    if (p.x < p.w/2 || p.x > gameWidth - p.w/2) {
+                        p.vx *= -1;
+                    }
+                }
+
+                if(this.player.vy > 0 && 
+                   this.player.x > p.x - p.w/2 - 20 && 
+                   this.player.x < p.x + p.w/2 + 20 &&
+                   this.player.y + 20 > p.y - 10 &&
+                   this.player.y + 20 < p.y + 10) {
+                    
+                    if(p.type === 'jump') {
+                        this.player.vy = this.player.jumpStrength * 1.5;
+                        SoundManager.playSuperJump();
+                    } else {
+                        this.player.vy = this.player.jumpStrength;
+                        SoundManager.playJump();
+                    }
+                }
+            });
+        },
+
+        draw: function() {
+            if (!isFinite(gameHeight) || gameHeight <= 0) return;
+
+            const grad = ctx.createLinearGradient(0, 0, 0, gameHeight);
+            grad.addColorStop(0, this.bgGradient[0]);
+            grad.addColorStop(1, this.bgGradient[1]);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, gameWidth, gameHeight);
+
+            ctx.fillStyle = 'rgba(255, 255, 255, 0.8)';
+            this.particles.forEach(p => {
+                ctx.globalAlpha = p.alpha;
+                ctx.beginPath();
+                let drawY = p.y - this.cameraY * 0.5;
+                drawY = ((drawY % gameHeight) + gameHeight) % gameHeight;
+                ctx.arc(p.x, drawY, p.size, 0, Math.PI*2);
+                ctx.fill();
+            });
+            ctx.globalAlpha = 1.0;
+
+            ctx.save();
+            ctx.translate(0, -this.cameraY);
+
+            this.platforms.forEach(p => {
+                if (p.y - this.cameraY > -50 && p.y - this.cameraY < gameHeight + 50) {
+                    ctx.fillStyle = p.type === 'jump' ? '#FFD1DC' : '#fff';
+                    
+                    ctx.beginPath();
+                    ctx.arc(p.x, p.y, 20, 0, Math.PI*2); 
+                    ctx.arc(p.x-25, p.y+5, 16, 0, Math.PI*2); 
+                    ctx.arc(p.x+25, p.y+5, 16, 0, Math.PI*2); 
+                    ctx.fill();
+                }
+            });
+
+            const p = this.player;
+            ctx.fillStyle = '#fff';
+            ctx.beginPath(); ctx.arc(p.x, p.y, 20, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#5A5480';
+            ctx.beginPath(); ctx.arc(p.x-8, p.y-2, 3, 0, Math.PI*2);
+            ctx.arc(p.x+8, p.y-2, 3, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#FFB7B2';
+            ctx.beginPath(); ctx.arc(p.x-10, p.y+6, 3, 0, Math.PI*2);
+            ctx.arc(p.x+10, p.y+6, 3, 0, Math.PI*2); ctx.fill();
+
+            ctx.restore();
+        }
+    };
+
+    // ==========================================
+    // [게임 2] Starry Night Catch 로직
+    // ==========================================
+    const catchGame = {
+        player: { x: 0, y: 0, w: 50, h: 50 },
+        items: [], 
+        spawnTimer: 0,
+        score: 0,
+        bgGradient: ['#0f2027', '#203a43', '#2c5364'], 
+
+        init: function() {
+            this.player.x = gameWidth / 2;
+            this.player.y = gameHeight - 80;
+            this.items = [];
+            this.spawnTimer = 0;
+            this.score = 0;
+        },
+
+        update: function() {
+            if(keys.ArrowLeft && this.player.x > 30) this.player.x -= 7;
+            if(keys.ArrowRight && this.player.x < gameWidth - 30) this.player.x += 7;
+
+            this.spawnTimer++;
+            let spawnRate = Math.max(10, 60 - Math.floor(this.score/30)); 
+            
+            if(this.spawnTimer > spawnRate) {
+                this.spawnTimer = 0;
+                let cloudChance = Math.min(0.6, 0.3 + (this.score / 1000));
+                let type = Math.random() < cloudChance ? 'cloud' : 'star'; 
+                
+                if (type === 'star') SoundManager.playSpawnStar();
+                else SoundManager.playSpawnCloud();
+
+                this.items.push({
+                    x: Math.random() * (gameWidth - 40) + 20,
+                    y: -30,
+                    type: type,
+                    speed: Math.random() * 3 + 3 + (this.score/100), 
+                    angle: 0
+                });
+            }
+
+            for(let i = this.items.length - 1; i >= 0; i--) {
+                let item = this.items[i];
+                item.y += item.speed;
+                item.angle += 0.05;
+
+                if(item.y > gameHeight) {
+                    this.items.splice(i, 1);
+                    continue;
+                }
+
+                let dx = this.player.x - item.x;
+                let dy = this.player.y - item.y;
+                let dist = Math.sqrt(dx*dx + dy*dy);
+
+                if(dist < 40) { 
+                    if(item.type === 'star') {
+                        this.score += 10;
+                        scoreEl.innerText = `점수: ${this.score}`;
+                        SoundManager.playCollect();
+                        this.items.splice(i, 1);
+                    } else {
+                        gameOver();
+                    }
+                }
+            }
+        },
+
+        draw: function() {
+            if (!isFinite(gameHeight) || gameHeight <= 0) return;
+
+            const grad = ctx.createLinearGradient(0, 0, 0, gameHeight);
+            grad.addColorStop(0, this.bgGradient[0]);
+            grad.addColorStop(0.5, this.bgGradient[1]);
+            grad.addColorStop(1, this.bgGradient[2]);
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, gameWidth, gameHeight);
+
+            ctx.fillStyle = '#fff';
+            for(let i=0; i<20; i++) {
+                ctx.fillRect((i*73)%gameWidth, (i*59)%gameHeight, 2, 2);
+            }
+
+            this.items.forEach(item => {
+                ctx.save();
+                ctx.translate(item.x, item.y);
+                ctx.rotate(item.angle);
+                
+                if(item.type === 'star') {
+                    ctx.fillStyle = '#FFD700';
+                    ctx.beginPath();
+                    for(let j=0; j<5; j++){
+                        ctx.lineTo(Math.cos((18+j*72)/180*Math.PI)*15, -Math.sin((18+j*72)/180*Math.PI)*15);
+                        ctx.lineTo(Math.cos((54+j*72)/180*Math.PI)*7, -Math.sin((54+j*72)/180*Math.PI)*7);
+                    }
+                    ctx.fill();
+                } else {
+                    ctx.fillStyle = '#7f8c8d';
+                    ctx.beginPath();
+                    ctx.arc(0, 0, 15, 0, Math.PI*2);
+                    ctx.arc(-10, 5, 10, 0, Math.PI*2);
+                    ctx.arc(10, 5, 10, 0, Math.PI*2);
+                    ctx.fill();
+                    // 번개
+                    ctx.strokeStyle = '#f1c40f';
+                    ctx.lineWidth = 2;
+                    ctx.beginPath(); ctx.moveTo(-5,-5); ctx.lineTo(0,0); ctx.lineTo(-3,3); ctx.lineTo(5,8); ctx.stroke();
+                }
+                ctx.restore();
+            });
+
+            const p = this.player;
+            ctx.fillStyle = '#fff';
+            ctx.beginPath(); ctx.arc(p.x, p.y, 20, 0, Math.PI*2); ctx.fill();
+            ctx.fillStyle = '#333';
+            ctx.beginPath(); ctx.arc(p.x-7, p.y-2, 2, 0, Math.PI*2); ctx.arc(p.x+7, p.y-2, 2, 0, Math.PI*2); ctx.fill();
+            ctx.strokeStyle = '#8e44ad';
+            ctx.lineWidth = 3;
+            ctx.beginPath(); ctx.arc(p.x, p.y-25, 15, 0, Math.PI, false); ctx.stroke();
+        }
+    };
+
+
+    // ==========================================
+    // 공통 게임 제어 함수
+    // ==========================================
+    
+    function switchGame(mode) {
+        resize(); 
+
+        currentGameMode = mode;
+        isPlaying = false;
+        if(gameLoopId) cancelAnimationFrame(gameLoopId);
+        
+        startScreen.classList.remove('hidden');
+        gameOverScreen.classList.add('hidden');
+        navBtns.forEach(btn => btn.classList.remove('active'));
+        
+        if(mode === 'jump') {
+            titleText.innerHTML = "Daydream<br>Jump";
+            descText.innerHTML = "꿈속 구름 위로 올라가세요.<br>터치/방향키로 이동";
+            contentJump.classList.add('active-content');
+            contentCatch.classList.remove('active-content');
+            navBtns[0].classList.add('active');
+            
+            jumpGame.init(); 
+            jumpGame.draw(); 
+        } else {
+            titleText.innerHTML = "Starry<br>Catch";
+            descText.innerHTML = "떨어지는 별을 받으세요!<br>먹구름은 피하세요.";
+            contentJump.classList.remove('active-content');
+            contentCatch.classList.add('active-content');
+            navBtns[1].classList.add('active');
+            
+            catchGame.init();
+            catchGame.draw();
+        }
+        
+        // 게임 모드 변경 시 배경음악도 변경 및 재생 시도
+        // 잠시 멈추고 소스 변경 후 재생
+        bgMusic.pause();
+        bgMusic.currentTime = 0;
+        playBgm();
+    }
+
+    function startGame() {
+        SoundManager.init();
+        
+        // BGM 재생 시도
+        playBgm();
+
+        startScreen.classList.add('hidden');
+        gameOverScreen.classList.add('hidden');
+        resize();
+        
+        if(currentGameMode === 'jump') {
+            jumpGame.init();
+            scoreEl.innerText = "높이: 0m";
+        } else {
+            catchGame.init();
+            scoreEl.innerText = "점수: 0";
+        }
+        
+        isPlaying = true;
+        loop();
+    }
+
+    function gameOver() {
+        SoundManager.playGameOver();
+        
+        // 게임 오버 시 BGM 멈출지 여부 (선택사항, 여기선 계속 재생하거나 멈춤)
+        // bgMusic.pause(); // 원하시면 주석 해제
+        
+        isPlaying = false;
+        gameOverScreen.classList.remove('hidden');
+        
+        if(currentGameMode === 'jump') {
+            gameOverTitle.innerText = "꿈에서 깼어요!";
+            finalScoreEl.innerText = `높이: ${Math.floor(jumpGame.score)}m`;
+        } else {
+            gameOverTitle.innerText = "먹구름에 닿았어요!";
+            finalScoreEl.innerText = `점수: ${catchGame.score}`;
+        }
+    }
+
+    function loop() {
+        if(!isPlaying) return;
+        
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        if(currentGameMode === 'jump') {
+            jumpGame.update();
+            jumpGame.draw();
+        } else {
+            catchGame.update();
+            catchGame.draw();
+        }
+        
+        gameLoopId = requestAnimationFrame(loop);
+    }
+    
+    function shareScore() {
+        const score = currentGameMode === 'jump' ? Math.floor(jumpGame.score) : catchGame.score;
+        const unit = currentGameMode === 'jump' ? 'm' : '점';
+        const title = currentGameMode === 'jump' ? 'Daydream Jump' : 'Starry Catch';
+        
+        const msg = `[INFP 힐링게임] ${title} 기록: ${score}${unit}! 귀여운 동그란 요정과 함께하세요! infp.kr`;
+        
+        if (navigator.share) {
+            navigator.share({ title: 'INFP Mini Games', text: msg, url: window.location.href });
+        } else {
+            const tempInput = document.createElement("input");
+            tempInput.value = window.location.href;
+            document.body.appendChild(tempInput);
+            tempInput.select();
+            document.execCommand("copy");
+            document.body.removeChild(tempInput);
+            alert("링크가 복사되었습니다!");
+        }
+    }
+
+    window.onload = function() {
+        resize();
+        switchGame('jump');
+    };
+
+</script>
+</body>
+</html>
