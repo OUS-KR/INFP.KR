@@ -686,15 +686,46 @@
             const grad = ctx.createLinearGradient(0, 0, 0, LOGICAL_HEIGHT);
             grad.addColorStop(0, '#2C3E50'); grad.addColorStop(1, '#4CA1AF');
             ctx.fillStyle = grad; ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
+
             ctx.fillStyle = '#2e8b57'; ctx.fillRect(0, LOGICAL_HEIGHT-80, LOGICAL_WIDTH, 80);
-            ctx.fillStyle = '#1a5235';
-            for(let i=0; i<5; i++) {
-                let x = ((i * 150) - (this.bgOffset * 0.5)) % (LOGICAL_WIDTH + 150);
+            
+            // [디자인 수정] 배경 나무 (침엽수 스타일)
+            for(let i=0; i<6; i++) { // 나무 개수 약간 증가
+                let x = ((i * 120) - (this.bgOffset * 0.5)) % (LOGICAL_WIDTH + 150);
                 if (x < -50) x += LOGICAL_WIDTH + 150;
-                ctx.fillRect(x, LOGICAL_HEIGHT-150, 40, 100); ctx.beginPath(); ctx.arc(x+20, LOGICAL_HEIGHT-160, 40, 0, Math.PI*2); ctx.fill();
+                
+                // 기둥
+                ctx.fillStyle = '#3E2723'; 
+                ctx.fillRect(x+15, LOGICAL_HEIGHT-150, 10, 100); 
+                
+                // 잎 (3단 삼각형)
+                ctx.fillStyle = '#1b4d3e'; // 짙은 녹색
+                
+                // 하단 잎
+                ctx.beginPath();
+                ctx.moveTo(x-10, LOGICAL_HEIGHT-120);
+                ctx.lineTo(x+50, LOGICAL_HEIGHT-120);
+                ctx.lineTo(x+20, LOGICAL_HEIGHT-180);
+                ctx.fill();
+                
+                // 중간 잎
+                ctx.beginPath();
+                ctx.moveTo(x-5, LOGICAL_HEIGHT-160);
+                ctx.lineTo(x+45, LOGICAL_HEIGHT-160);
+                ctx.lineTo(x+20, LOGICAL_HEIGHT-210);
+                ctx.fill();
+                
+                // 상단 잎
+                ctx.beginPath();
+                ctx.moveTo(x, LOGICAL_HEIGHT-190);
+                ctx.lineTo(x+40, LOGICAL_HEIGHT-190);
+                ctx.lineTo(x+20, LOGICAL_HEIGHT-230);
+                ctx.fill();
             }
+
             ctx.strokeStyle = 'rgba(200, 220, 255, 0.4)'; ctx.lineWidth = 1; ctx.beginPath();
             this.rain.forEach(r => { ctx.moveTo(r.x, r.y); ctx.lineTo(r.x-2, r.y+r.len); }); ctx.stroke();
+            
             this.obstacles.forEach(ob => {
                 if(ob.type === 'puddle') {
                     ctx.fillStyle = 'rgba(100, 149, 237, 0.8)'; ctx.beginPath(); ctx.ellipse(ob.x+15, ob.y+10, 20, 6, 0, 0, Math.PI*2); ctx.fill();
