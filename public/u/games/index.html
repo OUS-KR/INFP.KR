@@ -168,7 +168,7 @@
             border-radius: 8px; border: 1px dashed #ccc;
         }
 
-        /* --- 유튜브 플레이어 숨김 처리 (디버깅 완료 후 복구) --- */
+        /* --- 유튜브 플레이어 숨김 처리 --- */
         #youtube-player-container {
             position: absolute;
             top: 0;
@@ -432,7 +432,7 @@
                 'rel': 0,
                 'loop': 1, 
                 'playlist': youtubeVideoIds[currentGameMode],
-                'origin': window.location.origin // 보안 정책 준수 (실서버 배포시 필수)
+                // 'origin' 제거됨 (iframe 환경 호환성 위해)
             },
             events: {
                 'onReady': onPlayerReady,
@@ -470,6 +470,8 @@
                         suggestedQuality: 'small'
                     });
                 } else {
+                    // [수정] 재시작 시 항상 처음부터 재생 (seekTo 0)
+                    player.seekTo(0);
                     player.playVideo();
                 }
             } catch(e) {
