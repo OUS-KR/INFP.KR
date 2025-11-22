@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="INFP(열정적인 중재자)를 위한 힐링 게임 컬렉션. 몽환적인 점프 게임, 별 잡기, 빗속 산책 등 감성적인 미니게임을 즐기며 스트레스를 해소하세요.">
+    <meta name="description" content="INFP(열정적인 중재자)를 위한 힐링 게임 컬렉션. 몽환적인 점프 게임과 별 잡기 게임을 즐기며 스트레스를 해소하세요. INFP 성격 분석 포함.">
     <meta name="keywords" content="INFP, 인프피, MBTI 게임, 미니게임, 힐링게임, 무료 웹게임, 감성게임, 심리테스트">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta property="og:title" content="INFP Mini Games - 몽상가들의 놀이터">
@@ -459,7 +459,9 @@
         playSuperJump: function() { this.playTone(500, 'sine', 0.3, 0.15); },
         playCollect: function() { this.playTone(880, 'sine', 0.1, 0.1); setTimeout(()=>this.playTone(1100,'sine',0.2,0.1),50); },
         playGameOver: function() { this.playTone(200, 'triangle', 0.5, 0.2); },
-        playStack: function() { this.playTone(440 + (stackGame.score*20), 'sine', 0.1, 0.1); }
+        playStack: function() { this.playTone(440 + (stackGame.score*20), 'sine', 0.1, 0.1); },
+        playSpawnStar: function() { this.playTone(1200, 'sine', 0.05, 0.03); },
+        playSpawnCloud: function() { this.playTone(150, 'triangle', 0.2, 0.05); },
     };
 
     // YouTube BGM
@@ -525,21 +527,14 @@
         ctx.fillStyle = '#FFB7B2'; ctx.beginPath(); ctx.arc(x-10, y+6, 3, 0, Math.PI*2); ctx.arc(x+10, y+6, 3, 0, Math.PI*2); ctx.fill();
     }
     
-    // [디자인 수정] 가시 덩굴 그리기 (Tearful Swim)
     function drawThornVine(ctx, x, y, w, h, type) {
         ctx.fillStyle = '#1e3c72'; // Deep Blue Vine
-        // 줄기
         ctx.fillRect(x + w/3, y, w/3, h);
-        
-        // 가시 그리기
-        ctx.beginPath();
-        ctx.fillStyle = '#142850'; // Darker Blue
+        ctx.beginPath(); ctx.fillStyle = '#142850'; 
         const spikeCount = Math.floor(h / 30);
         for(let i=0; i<spikeCount; i++) {
             let py = y + (i * 30) + 10;
-            // 왼쪽 가시
             ctx.moveTo(x + w/3, py); ctx.lineTo(x, py + 10); ctx.lineTo(x + w/3, py + 20);
-            // 오른쪽 가시
             ctx.moveTo(x + 2*w/3, py + 15); ctx.lineTo(x + w, py + 25); ctx.lineTo(x + 2*w/3, py + 35);
         }
         ctx.fill();
