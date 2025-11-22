@@ -2,7 +2,7 @@
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="description" content="INFP(열정적인 중재자)를 위한 힐링 게임 컬렉션. 꿈의 팔레트, 별의 속삭임, 빗소리 자장가, 괜찮아 울어도 돼, 달님과의 비밀 이야기와 함께하는 감성 미니게임.">
+    <meta name="description" content="INFP(열정적인 중재자)를 위한 힐링 게임 컬렉션. 몽환적인 점프 게임과 별 잡기 게임을 즐기며 스트레스를 해소하세요. INFP 성격 분석 포함.">
     <meta name="keywords" content="INFP, 인프피, MBTI 게임, 미니게임, 힐링게임, 무료 웹게임, 감성게임">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta property="og:title" content="INFP Mini Games - 몽상가들의 놀이터">
@@ -31,7 +31,7 @@
             min-height: 100vh;
         }
 
-        /* --- 상단 헤더 & 메뉴 (스크롤 가능하게 변경) --- */
+        /* --- 상단 헤더 & 메뉴 --- */
         header {
             width: 100%;
             background: #2a1520;
@@ -58,25 +58,27 @@
             letter-spacing: -0.5px;
         }
 
-        /* 메뉴 탭 (가로 스크롤 지원) */
+        /* 메뉴 탭 (가운데 정렬 수정) */
         .game-nav {
             display: flex;
             gap: 6px;
             width: 100%;
+            max-width: 100%; /* 너비 제한 해제 */
+            justify-content: center; /* 가운데 정렬 */
             overflow-x: auto;
             padding-bottom: 5px;
             -webkit-overflow-scrolling: touch;
-            scrollbar-width: none; /* 파이어폭스 스크롤바 숨김 */
+            scrollbar-width: none;
         }
-        .game-nav::-webkit-scrollbar { display: none; } /* 크롬 스크롤바 숨김 */
+        .game-nav::-webkit-scrollbar { display: none; }
 
         .nav-btn {
-            flex: 0 0 auto; /* 크기 유지 */
+            flex: 0 0 auto;
             padding: 8px 12px;
             border: none;
             background: #3d2430;
             color: #999;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Varela Round', sans-serif; /* 영문 폰트 적용 */
             font-weight: bold;
             font-size: 13px;
             border-radius: 20px;
@@ -217,11 +219,12 @@
         <div class="header-content">
             <h1>☁️ INFP Mini Games</h1>
             <nav class="game-nav">
-                <button class="nav-btn active" onclick="switchGame('jump')">꿈의 팔레트</button>
-                <button class="nav-btn" onclick="switchGame('catch')">별의 속삭임</button>
-                <button class="nav-btn" onclick="switchGame('stroll')">빗속의 산책</button>
-                <button class="nav-btn" onclick="switchGame('tear')">괜찮아 울어도 돼</button>
-                <button class="nav-btn" onclick="switchGame('moon')">달님과의 비밀</button>
+                <!-- [수정] 메뉴 이름을 게임 제목과 통일 -->
+                <button class="nav-btn active" onclick="switchGame('jump')">Daydream Jump</button>
+                <button class="nav-btn" onclick="switchGame('catch')">Starry Catch</button>
+                <button class="nav-btn" onclick="switchGame('stroll')">Rainy Stroll</button>
+                <button class="nav-btn" onclick="switchGame('tear')">It's Okay to Cry</button>
+                <button class="nav-btn" onclick="switchGame('moon')">Moonlit Secret</button>
             </nav>
         </div>
     </header>
@@ -282,14 +285,14 @@
             <div class="highlight-box"><strong>☔ 힐링:</strong> 빗속을 걷는 것만으로도 마음이 차분해집니다.</div>
         </article>
 
-        <!-- 4. Tearful Swim (New) -->
+        <!-- 4. Tearful Swim -->
         <article class="content-section" id="content-tear">
             <h3>INFP '괜찮아 울어도 돼' (It's Okay to Cry)</h3>
             <p>눈물 바다 속을 자유롭게 유영해보세요. 터치하면 위로 헤엄칩니다. 슬픔의 가시 덩굴만 조심하세요.</p>
             <div class="highlight-box"><strong>💧 위로:</strong> 울고 싶을 땐 실컷 울어도 괜찮아요. 눈물은 당신을 더 단단하게 만듭니다.</div>
         </article>
 
-        <!-- 5. Moon Stack (New) -->
+        <!-- 5. Moon Stack -->
         <article class="content-section" id="content-moon">
             <h3>INFP '달님과의 비밀 이야기' (Moonlit Secret)</h3>
             <p>달님에게 닿을 수 있도록 별조각을 높이 쌓아 올리는 게임입니다. 타이밍을 맞춰 블록을 멈추세요.</p>
@@ -378,7 +381,7 @@
         playSuperJump: function() { this.playTone(500, 'sine', 0.3, 0.15); },
         playCollect: function() { this.playTone(880, 'sine', 0.1, 0.1); setTimeout(()=>this.playTone(1100,'sine',0.2,0.1),50); },
         playGameOver: function() { this.playTone(200, 'triangle', 0.5, 0.2); },
-        playStack: function() { this.playTone(440 + (stackGame.score*20), 'sine', 0.1, 0.1); } // 스택 쌓을 때 음 높어짐
+        playStack: function() { this.playTone(440 + (stackGame.score*20), 'sine', 0.1, 0.1); }
     };
 
     // YouTube BGM
@@ -442,6 +445,30 @@
         ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(x, y, 20, 0, Math.PI*2); ctx.fill(); 
         ctx.fillStyle = '#5A5480'; ctx.beginPath(); ctx.arc(x-8, y-2, 3, 0, Math.PI*2); ctx.arc(x+8, y-2, 3, 0, Math.PI*2); ctx.fill(); 
         ctx.fillStyle = '#FFB7B2'; ctx.beginPath(); ctx.arc(x-10, y+6, 3, 0, Math.PI*2); ctx.arc(x+10, y+6, 3, 0, Math.PI*2); ctx.fill();
+    }
+    
+    // [디자인 수정] 가시 덩굴 그리기 (Tearful Swim)
+    function drawThornVine(ctx, x, y, w, h, type) {
+        ctx.fillStyle = '#2F1B2E'; // 어두운 보라색 덩굴
+        // 줄기
+        ctx.fillRect(x + w/3, y, w/3, h);
+        
+        // 가시 그리기
+        ctx.beginPath();
+        ctx.fillStyle = '#4A2B4D';
+        const spikeCount = Math.floor(h / 30);
+        for(let i=0; i<spikeCount; i++) {
+            let py = y + (i * 30) + 10;
+            // 왼쪽 가시
+            ctx.moveTo(x + w/3, py);
+            ctx.lineTo(x, py + 10);
+            ctx.lineTo(x + w/3, py + 20);
+            // 오른쪽 가시
+            ctx.moveTo(x + 2*w/3, py + 15);
+            ctx.lineTo(x + w, py + 25);
+            ctx.lineTo(x + 2*w/3, py + 35);
+        }
+        ctx.fill();
     }
 
     // --- Game 1: Jump ---
@@ -636,14 +663,12 @@
             this.player.vy += this.gravity;
             this.player.y += this.player.vy;
             
-            // Boundaries
             if(this.player.y < 0 || this.player.y > LOGICAL_HEIGHT) return gameOver();
 
             this.spawnTimer++;
-            if(this.spawnTimer > 120) { // 2초마다 생성
-                let gap = 150; // 통과 간격
+            if(this.spawnTimer > 120) { 
+                let gap = 150; 
                 let topH = Math.random() * (LOGICAL_HEIGHT - gap - 100) + 50;
-                // 가시 덩굴 (Top & Bottom)
                 this.obstacles.push({x: LOGICAL_WIDTH, y: 0, w: 50, h: topH, type: 'top'});
                 this.obstacles.push({x: LOGICAL_WIDTH, y: topH + gap, w: 50, h: LOGICAL_HEIGHT - (topH+gap), type: 'bottom'});
                 this.spawnTimer = 0;
@@ -653,7 +678,7 @@
                 let ob = this.obstacles[i];
                 ob.x -= this.speed;
                 if(ob.x < -50) { this.obstacles.splice(i,1); this.score += 0.5; scoreEl.innerText = `점수: ${Math.floor(this.score)}`; continue; }
-                // Collision
+                
                 if(this.player.x < ob.x + ob.w && this.player.x + 20 > ob.x &&
                    this.player.y < ob.y + ob.h && this.player.y + 20 > ob.y) {
                     gameOver();
@@ -661,18 +686,13 @@
             }
         },
         draw: function() {
-            // Deep Blue Gradient
             const grad = ctx.createLinearGradient(0, 0, 0, LOGICAL_HEIGHT);
             grad.addColorStop(0, '#000428'); grad.addColorStop(1, '#004e92');
             ctx.fillStyle = grad; ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
             
-            // Obstacles (Thorns)
-            ctx.fillStyle = '#5F9EA0';
+            // [디자인 수정] 가시 덩굴 그리기
             this.obstacles.forEach(ob => {
-                ctx.fillRect(ob.x, ob.y, ob.w, ob.h);
-                // 가시 장식
-                ctx.strokeStyle = '#2F4F4F'; ctx.lineWidth=2;
-                ctx.beginPath(); ctx.moveTo(ob.x, ob.y); ctx.lineTo(ob.x+ob.w, ob.y+ob.h); ctx.stroke();
+                drawThornVine(ctx, ob.x, ob.y, ob.w, ob.h, ob.type);
             });
             
             drawCharacter(ctx, this.player.x, this.player.y);
@@ -684,7 +704,6 @@
         stack: [], currentBlock: null, score: 0, speed: 3, direction: 1, state: 'playing',
         init: function() {
             this.stack = []; this.score = 0; this.speed = 3; this.state = 'playing';
-            // Base block
             this.stack.push({x: LOGICAL_WIDTH/2 - 50, y: LOGICAL_HEIGHT - 50, w: 100, h: 30, color: '#483D8B'});
             this.spawnBlock();
         },
@@ -698,74 +717,46 @@
         },
         tap: function() {
             if(this.state !== 'playing') return;
-            
             let curr = this.currentBlock;
             let prev = this.stack[this.stack.length-1];
-            
-            // Stop movement
             let overlap = curr.w - Math.abs(curr.x - prev.x);
             
             if(overlap <= 0) {
-                this.state = 'over';
-                gameOver();
+                this.state = 'over'; gameOver();
             } else {
-                // Success - Trim block
                 SoundManager.playStack();
-                this.score++;
-                scoreEl.innerText = `층수: ${this.score}층`;
-                
-                // Adjust current block
+                this.score++; scoreEl.innerText = `층수: ${this.score}층`;
                 curr.w = overlap;
                 if(curr.x < prev.x) curr.x = prev.x; 
-                
                 this.stack.push(curr);
-                
-                // Increase speed slightly
-                this.speed += 0.2;
-                this.direction *= -1;
-                
-                // Camera shift effect (move stack down if too high)
+                this.speed += 0.2; this.direction *= -1;
                 if(this.stack.length > 10) {
                     this.stack.forEach(b => b.y += 30);
-                    this.stack.shift(); // Remove bottom to save memory
+                    this.stack.shift(); 
                 }
-                
                 this.spawnBlock();
             }
         },
         update: function() {
             if(this.state !== 'playing') return;
-            
             if(keys.Space || keys.ArrowUp) { keys.Space=false; keys.ArrowUp=false; this.tap(); }
-            
             let b = this.currentBlock;
             b.x += b.vx;
-            
-            // Bounce off walls
             if(b.x + b.w > LOGICAL_WIDTH || b.x < 0) {
-                b.vx *= -1;
-                this.direction = b.vx > 0 ? 1 : -1;
+                b.vx *= -1; this.direction = b.vx > 0 ? 1 : -1;
             }
         },
         draw: function() {
-            // Night Sky
             ctx.fillStyle = '#0b0d17'; ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
-            // Moon
             ctx.fillStyle = '#F4F6F0'; ctx.beginPath(); ctx.arc(LOGICAL_WIDTH-50, 80, 40, 0, Math.PI*2); ctx.fill();
-            
-            // Stack
             this.stack.forEach(b => {
                 ctx.fillStyle = b.color; ctx.fillRect(b.x, b.y, b.w, b.h);
                 ctx.strokeStyle='#fff'; ctx.strokeRect(b.x, b.y, b.w, b.h);
             });
-            
-            // Current Block
             if(this.currentBlock) {
                 let b = this.currentBlock;
                 ctx.fillStyle = b.color; ctx.fillRect(b.x, b.y, b.w, b.h);
             }
-            
-            // Character on top
             if(this.stack.length > 0) {
                 let top = this.stack[this.stack.length-1];
                 drawCharacter(ctx, top.x + top.w/2, top.y - 20);
@@ -782,12 +773,9 @@
             btn.classList.remove('active');
             if(btn.getAttribute('onclick').includes(mode)) btn.classList.add('active');
         });
-        
-        // Hide all contents
         Object.values(contents).forEach(el => el.classList.remove('active-content'));
         if(contents[mode]) contents[mode].classList.add('active-content');
 
-        // Set Title & Tip
         if(mode === 'jump') {
             titleText.innerHTML = "Daydream<br>Jump"; descText.innerHTML = "꿈속 구름 위로 올라가세요.<br>터치/방향키로 이동";
             gameTipText.innerText = "💡 Tip: 방향키 좌우 / 화면 터치";
