@@ -13,6 +13,11 @@
         @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;700&display=swap');
         @import url('https://fonts.googleapis.com/css2?family=Varela+Round&display=swap');
 
+        /* 모든 요소에 박스 사이징 적용 (여백 계산 오류 방지) */
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -21,8 +26,6 @@
             font-family: 'Noto Sans KR', sans-serif;
             overflow-x: hidden;
             line-height: 1.7;
-            /* 모바일에서 터치 하이라이트 제거 */
-            -webkit-tap-highlight-color: transparent;
         }
 
         .page-wrapper {
@@ -55,28 +58,27 @@
 
         h1 {
             font-size: 18px;
-            margin: 0 0 10px 0;
+            margin: 0 0 15px 0;
             color: #FFD1DC;
             letter-spacing: -0.5px;
         }
 
-        /* 메뉴 탭 */
+        /* [수정됨] 메뉴 탭: 줄바꿈 허용 (Wrap) 및 중앙 정렬 */
         .game-nav {
             display: flex;
-            gap: 6px;
+            flex-wrap: wrap;        /* 줄바꿈 허용 */
+            justify-content: center; /* 중앙 정렬 */
+            gap: 8px;              /* 버튼 간격 */
             width: 100%;
-            max-width: 100%; 
-            justify-content: center; 
-            overflow-x: auto;
+            max-width: 100%;
             padding-bottom: 5px;
-            -webkit-overflow-scrolling: touch;
-            scrollbar-width: none;
         }
+        /* 스크롤바 관련 스타일 제거 (더 이상 스크롤 안 함) */
         .game-nav::-webkit-scrollbar { display: none; }
 
         .nav-btn {
             flex: 0 0 auto;
-            padding: 8px 12px;
+            padding: 8px 14px;
             border: none;
             background: #3d2430;
             color: #999;
@@ -86,7 +88,8 @@
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            white-space: nowrap;
+            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
+            margin-bottom: 5px; /* 줄바꿈 시 상하 간격 */
         }
 
         .nav-btn.active {
@@ -117,8 +120,6 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* 터치 동작 제어 (스크롤 간섭 최소화) */
-            touch-action: pan-y; 
         }
 
         #game-wrapper:fullscreen {
@@ -197,8 +198,6 @@
             font-weight: bold; box-shadow: 0 5px 20px rgba(238, 43, 140, 0.4);
             transition: transform 0.1s; margin-bottom: 15px; min-width: 200px;
             font-family: 'Varela Round', sans-serif;
-            /* 터치 반응성 개선 */
-            touch-action: manipulation;
         }
         button.game-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(238, 43, 140, 0.3); }
         
@@ -207,13 +206,45 @@
 
         #youtube-player-container { position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; z-index: -1; pointer-events: none; }
 
-        /* --- 콘텐츠 섹션 --- */
-        .content-container { width: 100%; background-color: #1a0c13; display: flex; justify-content: center; padding: 50px 20px; flex: 1; }
-        .content-section { width: 100%; max-width: 700px; color: #ccc; display: none; }
+        /* --- 콘텐츠 섹션 (여백 수정됨) --- */
+        .content-container { 
+            width: 100%; 
+            background-color: #1a0c13; 
+            display: flex; 
+            justify-content: center; 
+            padding: 40px 20px; /* 상하좌우 여백 확보 */
+            flex: 1; 
+        }
+        .content-section { 
+            width: 100%; 
+            max-width: 700px; 
+            color: #ccc; 
+            display: none; 
+        }
         .content-section.active-content { display: block; }
-        .content-section h3 { color: #ee2b8c; border-bottom: 2px solid #444; padding-bottom: 10px; margin-top: 40px; }
-        .content-section p { margin-bottom: 20px; text-align: justify; line-height: 1.8; word-break: keep-all; }
-        .highlight-box { background: #2d1b24; padding: 25px; border-radius: 12px; border-left: 5px solid #ee2b8c; margin: 30px 0; }
+        
+        .content-section h3 { 
+            color: #ee2b8c; 
+            border-bottom: 2px solid #444; 
+            padding-bottom: 15px; 
+            margin-top: 10px; 
+            font-size: 1.4rem;
+            line-height: 1.4;
+        }
+        .content-section p { 
+            margin-bottom: 20px; 
+            text-align: justify; 
+            line-height: 1.8; 
+            word-break: keep-all; /* 단어 단위 줄바꿈 */
+        }
+        
+        .highlight-box { 
+            background: #2d1b24; 
+            padding: 25px; 
+            border-radius: 12px; 
+            border-left: 5px solid #ee2b8c; 
+            margin: 30px 0; 
+        }
         .highlight-box h4 { margin: 0 0 10px 0; color: #FFD1DC; font-size: 16px; }
         .highlight-box ul { margin: 0; padding-left: 20px; }
         .highlight-box li { margin-bottom: 5px; }
@@ -506,21 +537,17 @@
     window.addEventListener('keydown', e => { if(['ArrowLeft','ArrowRight','ArrowUp','Space'].includes(e.code)) { keys[e.code]=true; if(e.code==='Space') e.preventDefault(); } });
     window.addEventListener('keyup', e => { if(['ArrowLeft','ArrowRight','ArrowUp','Space'].includes(e.code)) keys[e.code]=false; });
 
-    // [수정] 터치 이벤트 수정: 버튼 클릭/스크롤 허용, 게임 조작만 처리
     gameWrapper.addEventListener('touchstart', e => {
-        // 버튼이나 컨트롤 요소를 터치했을 땐 이벤트 통과 (클릭 허용)
         if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.control-btn')) {
             return;
         }
         
         if(isPlaying) {
-            // 게임 중일 땐 스크롤 막고 게임 조작
             if (currentGameMode === 'stroll') strollGame.tapJump();
             else if (currentGameMode === 'tear') tearGame.tap();
             else if (currentGameMode === 'moon') stackGame.tap();
             e.preventDefault(); 
         }
-        // 게임 중이 아닐 땐(시작화면, 게임오버) preventDefault 안 함 -> 스크롤 가능
     }, {passive: false});
 
     gameWrapper.addEventListener('touchmove', e => {
@@ -531,7 +558,7 @@
                 if (touchX < LOGICAL_WIDTH / 2) { keys.ArrowLeft = true; keys.ArrowRight = false; }
                 else { keys.ArrowRight = true; keys.ArrowLeft = false; }
             }
-            e.preventDefault(); // 게임 중 스크롤 방지
+            e.preventDefault(); 
         }
     }, {passive: false});
 
@@ -814,9 +841,9 @@
 
     // --- Game 5: Moon Stack ---
     const stackGame = {
-        stack: [], currentBlock: null, score: 0, speed: 2, direction: 1, state: 'playing', // Initial speed 3 -> 2
+        stack: [], currentBlock: null, score: 0, speed: 2, direction: 1, state: 'playing', 
         init: function() {
-            this.stack = []; this.score = 0; this.speed = 2; this.state = 'playing'; // Initial speed 3 -> 2
+            this.stack = []; this.score = 0; this.speed = 2; this.state = 'playing'; 
             this.stack.push({x: LOGICAL_WIDTH/2 - 50, y: LOGICAL_HEIGHT - 50, w: 100, h: 30, color: '#483D8B'});
             this.spawnBlock();
         },
