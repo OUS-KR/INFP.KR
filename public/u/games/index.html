@@ -74,7 +74,7 @@
             border: none;
             background: #3d2430;
             color: #999;
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: 'Noto Sans KR', sans-serif; /* 가독성 위해 고딕 유지 */
             font-weight: bold;
             font-size: 12px;
             border-radius: 8px;
@@ -109,6 +109,14 @@
             border-radius: 12px;
             overflow: hidden;
             border: 4px solid #3d2430;
+            /* 픽셀 렌더링 제거 (부드러운 벡터 느낌) */
+        }
+
+        /* 전체화면 시 스타일 조정 */
+        #game-container:fullscreen {
+            width: 100vw;
+            height: 100vh;
+            border-radius: 0;
         }
 
         #game-container {
@@ -127,14 +135,50 @@
 
         /* 게임 UI */
         #ui-layer { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; }
+        
         #score-board { 
             position: absolute; top: 20px; left: 20px; 
             font-size: 20px; font-weight: bold; color: #fff; 
             background: rgba(0, 0, 0, 0.4); padding: 8px 15px; 
             border-radius: 20px; backdrop-filter: blur(2px); 
             border: 1px solid rgba(255,255,255,0.2);
-            font-family: 'Varela Round', sans-serif;
+            font-family: 'Varela Round', sans-serif; /* 둥근 폰트 */
             text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* 우측 상단 컨트롤 버튼 (전체화면, 음악감상) */
+        .ui-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            gap: 10px;
+            pointer-events: auto;
+            z-index: 20;
+        }
+
+        .control-btn {
+            width: 40px;
+            height: 40px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            backdrop-filter: blur(2px);
+            transition: background 0.2s, transform 0.1s;
+        }
+
+        .control-btn:hover {
+            background: rgba(238, 43, 140, 0.6);
+        }
+        
+        .control-btn:active {
+            transform: scale(0.9);
         }
 
         /* 오버레이 */
@@ -231,6 +275,11 @@
             <!-- UI 레이어 -->
             <div id="ui-layer">
                 <div id="score-board">SCORE: 0</div>
+                <!-- 우측 상단 컨트롤 버튼 -->
+                <div class="ui-controls">
+                    <button class="control-btn" onclick="openMusicLink()" title="음악 감상 (유튜브)">🎵</button>
+                    <button class="control-btn" onclick="toggleFullScreen()" title="전체 화면">⛶</button>
+                </div>
             </div>
 
             <!-- 시작 화면 -->
@@ -337,6 +386,7 @@
     let gameHeight = 480;
 
     function resize() {
+        // 전체화면 상태 등 고려하여 컨테이너 크기 다시 계산
         if (!gameContainer) return;
         gameWidth = gameContainer.clientWidth || 320;
         gameHeight = gameContainer.clientHeight || 480;
@@ -347,6 +397,27 @@
     }
     window.addEventListener('resize', resize);
     resize(); 
+
+    // --- 전체 화면 & 음악 링크 기능 ---
+    function toggleFullScreen() {
+        if (!document.fullscreenElement) {
+            gameContainer.requestFullscreen().catch(err => {
+                alert(`전체 화면 오류: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+    
+    // 전체 화면 변경 감지 시 리사이즈 호출
+    document.addEventListener('fullscreenchange', resize);
+
+    function openMusicLink() {
+        const videoId = youtubeVideoIds[currentGameMode];
+        if (videoId) {
+            window.open(`https://www.youtube.com/watch?v=${videoId}`, '_blank');
+        }
+    }
 
     // --- 사운드 매니저 (효과음) ---
     const SoundManager = {
@@ -671,6 +742,7 @@
             this.items.forEach(item => {
                 ctx.save(); ctx.translate(item.x, item.y); ctx.rotate(item.angle);
                 if(item.type==='star') { 
+                    // 별 그리기
                     ctx.fillStyle='#FFD700'; 
                     ctx.beginPath();
                     for(let j=0; j<5; j++){
@@ -680,6 +752,7 @@
                     ctx.fill();
                 }
                 else { 
+                    // 구름 그리기
                     ctx.fillStyle='#7f8c8d'; 
                     ctx.beginPath(); ctx.arc(0,0,15,0,Math.PI*2); ctx.arc(-10,5,10,0,Math.PI*2); ctx.arc(10,5,10,0,Math.PI*2); ctx.fill();
                     ctx.strokeStyle='#f1c40f'; ctx.lineWidth=2; ctx.beginPath(); ctx.moveTo(-5,-5); ctx.lineTo(0,0); ctx.lineTo(-3,3); ctx.lineTo(5,8); ctx.stroke(); 
