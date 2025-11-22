@@ -58,12 +58,12 @@
 
         h1 {
             font-size: 18px;
-            margin: 0 0 15px 0;
+            margin: 0 0 10px 0;
             color: #FFD1DC;
             letter-spacing: -0.5px;
         }
 
-        /* [수정됨] 메뉴 탭: 줄바꿈 허용 (Wrap) 및 중앙 정렬 */
+        /* 메뉴 탭: 줄바꿈 허용 (Wrap) 및 중앙 정렬 */
         .game-nav {
             display: flex;
             flex-wrap: wrap;        /* 줄바꿈 허용 */
@@ -73,7 +73,6 @@
             max-width: 100%;
             padding-bottom: 5px;
         }
-        /* 스크롤바 관련 스타일 제거 (더 이상 스크롤 안 함) */
         .game-nav::-webkit-scrollbar { display: none; }
 
         .nav-btn {
@@ -88,8 +87,8 @@
             border-radius: 20px;
             cursor: pointer;
             transition: all 0.3s ease;
-            white-space: nowrap; /* 텍스트 줄바꿈 방지 */
-            margin-bottom: 5px; /* 줄바꿈 시 상하 간격 */
+            white-space: nowrap;
+            margin-bottom: 5px;
         }
 
         .nav-btn.active {
@@ -198,6 +197,7 @@
             font-weight: bold; box-shadow: 0 5px 20px rgba(238, 43, 140, 0.4);
             transition: transform 0.1s; margin-bottom: 15px; min-width: 200px;
             font-family: 'Varela Round', sans-serif;
+            touch-action: manipulation;
         }
         button.game-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(238, 43, 140, 0.3); }
         
@@ -206,13 +206,13 @@
 
         #youtube-player-container { position: absolute; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; z-index: -1; pointer-events: none; }
 
-        /* --- 콘텐츠 섹션 (여백 수정됨) --- */
+        /* --- 콘텐츠 섹션 --- */
         .content-container { 
             width: 100%; 
             background-color: #1a0c13; 
             display: flex; 
             justify-content: center; 
-            padding: 40px 20px; /* 상하좌우 여백 확보 */
+            padding: 40px 20px;
             flex: 1; 
         }
         .content-section { 
@@ -235,7 +235,7 @@
             margin-bottom: 20px; 
             text-align: justify; 
             line-height: 1.8; 
-            word-break: keep-all; /* 단어 단위 줄바꿈 */
+            word-break: keep-all; 
         }
         
         .highlight-box { 
@@ -501,7 +501,7 @@
         playSpawnCloud: function() { this.playTone(150, 'triangle', 0.2, 0.05); },
     };
 
-    // YouTube BGM
+    // YouTube BGM (Safe IDs)
     const youtubeVideoIds = {
         jump: '47MN96eTY0c', catch: 'IpoCGLfG2Bc', stroll: 'wlvuYE9tFhQ',
         tear: 'T_ZPKquWUPc', moon: 'Ve8nMeov5Pc'
@@ -819,7 +819,7 @@
             }
         },
         draw: function() {
-            // Background: Deep Tear Ocean (Modified for underwater feel)
+            // Background: Deep Tear Ocean
             const grad = ctx.createLinearGradient(0, 0, 0, LOGICAL_HEIGHT);
             grad.addColorStop(0, '#1A2980'); grad.addColorStop(1, '#26D0CE'); 
             ctx.fillStyle = grad; ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
@@ -830,7 +830,7 @@
                 ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2); ctx.fill();
             });
             
-            // Obstacles (Thorn Vines)
+            // Obstacles
             this.obstacles.forEach(ob => {
                 drawThornVine(ctx, ob.x, ob.y, ob.w, ob.h, ob.type);
             });
@@ -913,6 +913,10 @@
             btn.classList.remove('active');
             if(btn.getAttribute('onclick').includes(mode)) btn.classList.add('active');
         });
+        
+        // URL 해시 업데이트 (공유를 위해)
+        window.location.hash = mode;
+
         Object.values(contents).forEach(el => el.classList.remove('active-content'));
         if(contents[mode]) contents[mode].classList.add('active-content');
 
@@ -977,14 +981,27 @@
     
     function shareScore() {
         const titles = {'jump':'Daydream Jump', 'catch':'Starry Catch', 'stroll':'Rainy Stroll', 'tear':"It's Okay to Cry", 'moon':'Moonlit Secret'};
-        const msg = `[INFP 힐링게임] ${titles[currentGameMode]} 기록! 귀여운 동그란 요정과 함께하세요! infp.kr`;
-        if (navigator.share) { navigator.share({ title: 'INFP Mini Games', text: msg, url: window.location.href }); } 
+        // 해시가 포함된 정확한 링크 공유
+        const shareUrl = `${window.location.origin}${window.location.pathname}#${currentGameMode}`;
+        const msg = `[INFP 힐링게임] ${titles[currentGameMode]}! 귀여운 동그란 요정과 함께하세요! ${shareUrl}`;
+        if (navigator.share) { navigator.share({ title: 'INFP Mini Games', text: msg, url: shareUrl }); } 
         else { 
-            const tempInput = document.createElement("input"); tempInput.value = window.location.href; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput); alert("링크가 복사되었습니다!"); 
+            const tempInput = document.createElement("input"); tempInput.value = shareUrl; document.body.appendChild(tempInput); tempInput.select(); document.execCommand("copy"); document.body.removeChild(tempInput); alert("링크가 복사되었습니다!"); 
         }
     }
 
-    window.onload = function() { resize(); switchGame('jump'); };
+    window.onload = function() { 
+        resize(); 
+        // URL 해시를 통해 특정 게임 모드 로드
+        const hash = window.location.hash.replace('#', '');
+        const validModes = ['jump', 'catch', 'stroll', 'tear', 'moon'];
+        
+        if (validModes.includes(hash)) {
+            switchGame(hash);
+        } else {
+            switchGame('jump');
+        }
+    };
 </script>
 </body>
 </html>
