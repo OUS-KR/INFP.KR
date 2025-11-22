@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="description" content="INFP(열정적인 중재자)를 위한 힐링 게임 컬렉션. 몽환적인 점프 게임과 별 잡기 게임을 즐기며 스트레스를 해소하세요. INFP 성격 분석 포함.">
-    <meta name="keywords" content="INFP, 인프피, MBTI 게임, 미니게임, 힐링게임, 무료 웹게임, 감성게임, 심리테스트">
+    <meta name="keywords" content="INFP, 인프피, MBTI 게임, 미니게임, 힐링게임, 무료 웹게임, 빗소리, 자장가, 러닝게임, 감성게임">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta property="og:title" content="INFP Mini Games - 몽상가들의 놀이터">
     <meta property="og:description" content="INFP를 위한 다섯 가지 힐링 게임 컬렉션">
@@ -21,6 +21,8 @@
             font-family: 'Noto Sans KR', sans-serif;
             overflow-x: hidden;
             line-height: 1.7;
+            /* 모바일에서 터치 하이라이트 제거 */
+            -webkit-tap-highlight-color: transparent;
         }
 
         .page-wrapper {
@@ -115,6 +117,8 @@
             display: flex;
             justify-content: center;
             align-items: center;
+            /* 터치 동작 제어 (스크롤 간섭 최소화) */
+            touch-action: pan-y; 
         }
 
         #game-wrapper:fullscreen {
@@ -193,6 +197,8 @@
             font-weight: bold; box-shadow: 0 5px 20px rgba(238, 43, 140, 0.4);
             transition: transform 0.1s; margin-bottom: 15px; min-width: 200px;
             font-family: 'Varela Round', sans-serif;
+            /* 터치 반응성 개선 */
+            touch-action: manipulation;
         }
         button.game-btn:active { transform: scale(0.96); box-shadow: 0 2px 10px rgba(238, 43, 140, 0.3); }
         
@@ -500,24 +506,35 @@
     window.addEventListener('keydown', e => { if(['ArrowLeft','ArrowRight','ArrowUp','Space'].includes(e.code)) { keys[e.code]=true; if(e.code==='Space') e.preventDefault(); } });
     window.addEventListener('keyup', e => { if(['ArrowLeft','ArrowRight','ArrowUp','Space'].includes(e.code)) keys[e.code]=false; });
 
+    // [수정] 터치 이벤트 수정: 버튼 클릭/스크롤 허용, 게임 조작만 처리
     gameWrapper.addEventListener('touchstart', e => {
+        // 버튼이나 컨트롤 요소를 터치했을 땐 이벤트 통과 (클릭 허용)
+        if (e.target.tagName === 'BUTTON' || e.target.closest('button') || e.target.closest('.control-btn')) {
+            return;
+        }
+        
         if(isPlaying) {
+            // 게임 중일 땐 스크롤 막고 게임 조작
             if (currentGameMode === 'stroll') strollGame.tapJump();
             else if (currentGameMode === 'tear') tearGame.tap();
             else if (currentGameMode === 'moon') stackGame.tap();
+            e.preventDefault(); 
         }
-        e.preventDefault();
+        // 게임 중이 아닐 땐(시작화면, 게임오버) preventDefault 안 함 -> 스크롤 가능
     }, {passive: false});
 
     gameWrapper.addEventListener('touchmove', e => {
-        const rect = gameStage.getBoundingClientRect();
-        const touchX = (e.touches[0].clientX - rect.left) / scaleRatio;
-        if (currentGameMode === 'jump' || currentGameMode === 'catch') {
-            if (touchX < LOGICAL_WIDTH / 2) { keys.ArrowLeft = true; keys.ArrowRight = false; }
-            else { keys.ArrowRight = true; keys.ArrowLeft = false; }
+        if(isPlaying) {
+            const rect = gameStage.getBoundingClientRect();
+            const touchX = (e.touches[0].clientX - rect.left) / scaleRatio;
+            if (currentGameMode === 'jump' || currentGameMode === 'catch') {
+                if (touchX < LOGICAL_WIDTH / 2) { keys.ArrowLeft = true; keys.ArrowRight = false; }
+                else { keys.ArrowRight = true; keys.ArrowLeft = false; }
+            }
+            e.preventDefault(); // 게임 중 스크롤 방지
         }
-        e.preventDefault();
     }, {passive: false});
+
     gameWrapper.addEventListener('touchend', e => { keys.ArrowLeft = false; keys.ArrowRight = false; });
 
     // Character Draw
@@ -686,46 +703,15 @@
             const grad = ctx.createLinearGradient(0, 0, 0, LOGICAL_HEIGHT);
             grad.addColorStop(0, '#2C3E50'); grad.addColorStop(1, '#4CA1AF');
             ctx.fillStyle = grad; ctx.fillRect(0, 0, LOGICAL_WIDTH, LOGICAL_HEIGHT);
-
             ctx.fillStyle = '#2e8b57'; ctx.fillRect(0, LOGICAL_HEIGHT-80, LOGICAL_WIDTH, 80);
-            
-            // [디자인 수정] 배경 나무 (침엽수 스타일)
-            for(let i=0; i<6; i++) { // 나무 개수 약간 증가
-                let x = ((i * 120) - (this.bgOffset * 0.5)) % (LOGICAL_WIDTH + 150);
+            ctx.fillStyle = '#1a5235';
+            for(let i=0; i<5; i++) {
+                let x = ((i * 150) - (this.bgOffset * 0.5)) % (LOGICAL_WIDTH + 150);
                 if (x < -50) x += LOGICAL_WIDTH + 150;
-                
-                // 기둥
-                ctx.fillStyle = '#3E2723'; 
-                ctx.fillRect(x+15, LOGICAL_HEIGHT-150, 10, 100); 
-                
-                // 잎 (3단 삼각형)
-                ctx.fillStyle = '#1b4d3e'; // 짙은 녹색
-                
-                // 하단 잎
-                ctx.beginPath();
-                ctx.moveTo(x-10, LOGICAL_HEIGHT-120);
-                ctx.lineTo(x+50, LOGICAL_HEIGHT-120);
-                ctx.lineTo(x+20, LOGICAL_HEIGHT-180);
-                ctx.fill();
-                
-                // 중간 잎
-                ctx.beginPath();
-                ctx.moveTo(x-5, LOGICAL_HEIGHT-160);
-                ctx.lineTo(x+45, LOGICAL_HEIGHT-160);
-                ctx.lineTo(x+20, LOGICAL_HEIGHT-210);
-                ctx.fill();
-                
-                // 상단 잎
-                ctx.beginPath();
-                ctx.moveTo(x, LOGICAL_HEIGHT-190);
-                ctx.lineTo(x+40, LOGICAL_HEIGHT-190);
-                ctx.lineTo(x+20, LOGICAL_HEIGHT-230);
-                ctx.fill();
+                ctx.fillRect(x, LOGICAL_HEIGHT-150, 40, 100); ctx.beginPath(); ctx.arc(x+20, LOGICAL_HEIGHT-160, 40, 0, Math.PI*2); ctx.fill();
             }
-
             ctx.strokeStyle = 'rgba(200, 220, 255, 0.4)'; ctx.lineWidth = 1; ctx.beginPath();
             this.rain.forEach(r => { ctx.moveTo(r.x, r.y); ctx.lineTo(r.x-2, r.y+r.len); }); ctx.stroke();
-            
             this.obstacles.forEach(ob => {
                 if(ob.type === 'puddle') {
                     ctx.fillStyle = 'rgba(100, 149, 237, 0.8)'; ctx.beginPath(); ctx.ellipse(ob.x+15, ob.y+10, 20, 6, 0, 0, Math.PI*2); ctx.fill();
