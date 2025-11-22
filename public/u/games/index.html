@@ -168,19 +168,16 @@
             border-radius: 8px; border: 1px dashed #ccc;
         }
 
-        /* --- 유튜브 플레이어: 우측 하단 작게 배치 (디버깅용) --- */
+        /* --- 유튜브 플레이어 숨김 처리 (디버깅 완료 후 복구) --- */
         #youtube-player-container {
-            position: fixed; 
-            bottom: 10px;    
-            right: 10px;
-            width: 120px;    /* 조금 더 작게 */
-            height: 90px;
-            opacity: 0.8;      
-            z-index: 9999;   
-            pointer-events: none; /* 클릭 통과 */
-            border: 2px solid #ee2b8c; 
-            background: black;
-            border-radius: 8px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 1px; /* 최소 크기 */
+            height: 1px;
+            opacity: 0.01; /* 투명도 */
+            z-index: -1; /* 뒤로 숨김 */
+            pointer-events: none;
             overflow: hidden;
         }
 
@@ -245,7 +242,7 @@
         </div>
     </div>
 
-    <!-- 유튜브 플레이어 컨테이너 -->
+    <!-- 유튜브 플레이어 컨테이너 (숨김 상태) -->
     <div id="youtube-player-container">
         <div id="youtube-player"></div>
     </div>
@@ -408,12 +405,10 @@
         }
     };
 
-    // --- YouTube BGM Manager (안전한 NCS 음악으로 교체) ---
+    // --- YouTube BGM Manager (ID 수정됨) ---
     const youtubeVideoIds = {
-        // Kevin MacLeod - Fluffing a Duck (Safe, Embeddable)
-        jump: 'Sbdutn8Q1T0', 
-        // Kevin MacLeod - Monkeys Spinning Monkeys (Safe, Embeddable)
-        catch: 'uXnInhM68Og' 
+        jump: '47MN96eTY0c', 
+        catch: 'IpoCGLfG2Bc' 
     };
 
     let player;
@@ -427,7 +422,7 @@
 
     function onYouTubeIframeAPIReady() {
         player = new YT.Player('youtube-player', {
-            height: '200', // 충분한 크기 확보
+            height: '200', // 실제 크기
             width: '200',
             videoId: youtubeVideoIds[currentGameMode],
             playerVars: {
@@ -437,7 +432,7 @@
                 'rel': 0,
                 'loop': 1, 
                 'playlist': youtubeVideoIds[currentGameMode],
-                // 'origin': ... // 오류 방지를 위해 origin 파라미터 제거
+                'origin': window.location.origin // 보안 정책 준수 (실서버 배포시 필수)
             },
             events: {
                 'onReady': onPlayerReady,
@@ -461,7 +456,6 @@
     
     function onPlayerError(event) {
         console.error("YouTube Player Error:", event.data);
-        // 에러 발생 시 로그 출력 (153 등)
     }
 
     function playBgm() {
@@ -469,7 +463,6 @@
             const targetId = youtubeVideoIds[currentGameMode];
             
             try {
-                // 현재 로드된 비디오 ID가 다르거나 없으면 로드
                 if (player.getVideoData && player.getVideoData().video_id !== targetId) {
                      player.loadVideoById({
                         videoId: targetId,
