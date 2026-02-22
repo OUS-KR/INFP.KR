@@ -1,1 +1,1 @@
-# INFP.KR
+# [INFP.KR](https://infp.kr)
